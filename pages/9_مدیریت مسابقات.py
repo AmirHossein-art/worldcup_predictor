@@ -31,6 +31,10 @@ require_admin()
 
 st.title("⚽ مدیریت مسابقات")
 
+st.caption(
+    "تمام زمان‌ها بر اساس ساعت ایران وارد شوند."
+)
+
 
 # ==========================
 # Database Session
@@ -256,6 +260,16 @@ else:
                 key=f"away_score_{match.match_id}"
             )
 
+            qualified_team = st.radio(
+                "تیم صعود کننده",
+                [
+                    match.home_team,
+                    match.away_team
+                ],
+                horizontal=True,
+                key=f"result_qualified_{match.match_id}"
+            )
+
             if st.button(
                 "ثبت نتیجه",
                 key=f"save_result_{match.match_id}",
@@ -265,6 +279,8 @@ else:
                 match.home_score = home_score
 
                 match.away_score = away_score
+
+                match.qualified_team = qualified_team
 
                 match.result_entered = True
 

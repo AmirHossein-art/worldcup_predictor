@@ -152,6 +152,11 @@ class Match(Base):
         back_populates="match"
     )
 
+    qualified_team = Column(
+        String(100),
+        nullable=True
+    )
+
 class Prediction(Base):
 
     __tablename__ = "predictions"
@@ -188,6 +193,12 @@ class Prediction(Base):
         DateTime,
         default=datetime.utcnow
     )
+
+    pred_qualified_team = Column(
+        String(100),
+        nullable=True
+    )
+
     user = relationship(
         "User",
         back_populates="predictions"
