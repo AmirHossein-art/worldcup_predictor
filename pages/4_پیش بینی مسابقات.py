@@ -2,6 +2,8 @@ import streamlit as st
 
 from datetime import datetime
 
+from utils.date_utils import can_predict
+
 from database.connection import SessionLocal
 from database.models import Match, Prediction
 
@@ -75,83 +77,31 @@ for match in matches:
             f"🕒 {match.kickoff_time}"
         )
 
+        prediction_open = can_predict(
+            match
+        )
+        if not prediction_open:
+            st.warning(
+                "⛔ مهلت ثبت پیش‌بینی به پایان رسیده است"
+            )
+
         st.divider()
 
-        if existing:
+        if prediction_open:
 
-            home_pred = st.number_input(
-            f"گل {match.home_team}",
-            min_value=0,
-            value=existing.pred_home,
-            key=f"home_{match.match_id}"
-            )
-
-            away_pred = st.number_input(
-                f"گل {match.away_team}",
-                min_value=0,
-                value=existing.pred_away,
-                key=f"away_{match.match_id}"
-            )
-
-            pred_qualified_team = None
-
-            if match.stage in KNOCKOUT_STAGES:
-
-                selected_index = 0
-
-                if (
-                    existing.pred_qualified_team
-                    ==
-                    match.away_team
-                ):
-                    selected_index = 1
-
-                pred_qualified_team = st.radio(
-                    "🏆 تیم صعود کننده",
-                    [
-                        match.home_team,
-                        match.away_team
-                    ],
-                    index=selected_index,
-                    horizontal=True,
-                    key=f"qualified_{match.match_id}"
-                )
-
-            if st.button(
-                "💾 ذخیره تغییرات",
-                key=f"update_{match.match_id}",
-                use_container_width=True
-            ):
-
-                existing.pred_home = home_pred
-                existing.pred_away = away_pred
-                existing.pred_qualified_team = pred_qualified_team
-
-                db.commit()
-
-                st.success("تغییرات ذخیره شد")
-
-                st.rerun()
-
-        else:
-
-            col1, col2 = st.columns(2)
-
-            with col1:
+            if existing:
 
                 home_pred = st.number_input(
-                    f"گل {match.home_team}",
-                    min_value=0,
-                    step=1,
-                    key=f"home_{match.match_id}"
+                f"گل {match.home_team}",
+                min_value=0,
+                value=existing.pred_home,
+                key=f"home_{match.match_id}"
                 )
-
-            with col2:
 
                 away_pred = st.number_input(
                     f"گل {match.away_team}",
                     min_value=0,
-                    step=1,
+                    value=existing.pred_away,
                     key=f"away_{match.match_id}"
                 )
 
@@ -159,20 +109,102 @@ for match in matches:
 
                 if match.stage in KNOCKOUT_STAGES:
 
+                    selected_index = 0
+
+                    if (
+                        existing.pred_qualified_team
+                        ==
+                        match.away_team
+                    ):
+                        selected_index = 1
+
                     pred_qualified_team = st.radio(
                         "🏆 تیم صعود کننده",
                         [
                             match.home_team,
                             match.away_team
                         ],
+                        index=selected_index,
                         horizontal=True,
                         key=f"qualified_{match.match_id}"
                     )
+
                 if st.button(
-                    "✅ ثبت پیش‌بینی",
-                    key=f"submit_{match.match_id}",
+                    "💾 ذخیره تغییرات",
+                    key=f"update_{match.match_id}",
                     use_container_width=True
                 ):
+
+                    existing.pred_home = home_pred
+                    existing.pred_away = away_pred
+                    existing.pred_qualified_team = pred_qualified_team
+
+                    db.commit()
+
+                    st.success("تغییرات ذخیره شد")
+
+                    st.rerun()
+
+            else:
+
+                col1, col2 = st.columns(2)
+
+                with col1:
+
+                    home_pred = st.number_input(
+                        f"گل {match.home_team}",
+                        min_value=0,
+                        step=1,
+                        key=f"home_{match.match_id}"
+                    )
+
+                with col2:
+
+                    away_pred = st.number_input(
+                        f"گل {match.away_team}",
+                        min_value=0,
+                        step=1,
+                        key=f"away_{match.match_id}"
+                    )
+
+                    pred_qualified_team = None
+
+                    if match.stage in KNOCKOUT_STAGES:
+
+                        pred_qualified_team = st.radio(
+                            "🏆 تیم صعود کننده",
+                            [
+                                match.home_team,
+                                match.away_team
+                            ],
+                            horizontal=True,
+                            key=f"qualified_{match.match_id}"
+                        )
+                    if st.button(
+                        "✅ ثبت پیش‌بینی",
+                        key=f"submit_{match.match_id}",
+                        use_container_width=True
+                    ):
+
+                        new_prediction = Prediction(
+                            user_id=st.session_state[
+                                SESSION_USER_ID
+                            ],
+                            match_id=match.match_id,
+                            pred_home=home_pred,
+                            pred_away=away_pred,
+                            pred_qualified_team=pred_qualified_team
+                        )
+
+                        db.add(new_prediction)
+
+                        db.commit()
+
+                        st.success(
+                            "پیش‌بینی ثبت شد"
+                        )
+
+                        st.rerun()           
 
                     new_prediction = Prediction(
                         user_id=st.session_state[
@@ -184,36 +216,16 @@ for match in matches:
                         pred_qualified_team=pred_qualified_team
                     )
 
-                    db.add(new_prediction)
+                    db.add(
+                        new_prediction
+                    )
 
                     db.commit()
 
                     st.success(
-                        "پیش‌بینی ثبت شد"
+                        "✅ پیش‌بینی ثبت شد"
                     )
 
-                    st.rerun()           
-
-                new_prediction = Prediction(
-                    user_id=st.session_state[
-                        SESSION_USER_ID
-                    ],
-                    match_id=match.match_id,
-                    pred_home=home_pred,
-                    pred_away=away_pred,
-                    pred_qualified_team=pred_qualified_team
-                )
-
-                db.add(
-                    new_prediction
-                )
-
-                db.commit()
-
-                st.success(
-                    "✅ پیش‌بینی ثبت شد"
-                )
-
-                st.rerun()
+                    st.rerun()
 
 db.close()
