@@ -1,9 +1,9 @@
 import streamlit as st
 
-st.set_option_config(
+st.set_page_config(
     page_title="World Cup Predictor",
     page_icon="⚽",
-    layout="wide",
+    layout="centered",
 )
 
 st.title("🏆 مسابقه پیش‌بینی جام جهانی 2026")

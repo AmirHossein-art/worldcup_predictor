@@ -7,6 +7,7 @@ from database.connection import SessionLocal
 from services.auth_service import (
     register_user
 )
+from utils.validators import normalize_digits
 
 st.title("ثبت نام")
 
@@ -66,7 +67,7 @@ if submit:
                 db=db,
                 first_name=first_name,
                 last_name=last_name,
-                national_id=national_id,
+                national_id=normalize_digits(national_id),
                 phone=phone,
                 organization="سازمان حمل و نقل و ترافیک",
                 department=department,

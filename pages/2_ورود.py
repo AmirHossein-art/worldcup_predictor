@@ -8,12 +8,14 @@ from services.auth_service import (
 
 from utils.constants import (
     SESSION_LOGGED_IN,
+    SESSION_NATIONAL_ID,
     SESSION_USER_ID,
     SESSION_FIRST_NAME,
     SESSION_LAST_NAME,
     SESSION_DEPARTMENT,
     SESSION_IS_VERIFIED
 )
+from utils.validators import normalize_digits
 
 st.title("ورود")
 
@@ -41,7 +43,7 @@ if submit:
 
         user = login_user(
             db=db,
-            national_id=national_id,
+            national_id=normalize_digits(national_id),
             password=password
         )
 
@@ -69,7 +71,9 @@ if submit:
             SESSION_IS_VERIFIED
         ] = user.is_verified
 
-        st.session_state["national_id"] = user.national_id
+        st.session_state[
+            SESSION_NATIONAL_ID
+        ] = user.national_id
 
         st.success(
             "ورود موفقیت‌آمیز بود."
@@ -77,12 +81,13 @@ if submit:
 
         db.close()
 
+        st.switch_page(
+            "pages/3_داشبورد.py"
+        )
+
     except Exception as e:
 
         st.error(
             str(e)
-        )
-
-    st.switch_page(
-        "pages/3_داشبورد.py"
-    )
+        ) 
+    

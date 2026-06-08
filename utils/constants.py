@@ -11,7 +11,9 @@ SESSION_DEPARTMENT = "department"
 
 SESSION_IS_VERIFIED = "is_verified"
 
+SESSION_NATIONAL_ID = "national_id"
 
 ADMIN_NATIONAL_IDS = [
     "0312322887"
 ]
+

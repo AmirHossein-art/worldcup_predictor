@@ -9,6 +9,7 @@ from sqlalchemy import (
     ForeignKey,
     UniqueConstraint
 )
+from sqlalchemy.orm import relationship
 
 from database.connection import Base
 
@@ -79,6 +80,17 @@ class User(Base):
         default=False
     )
 
+    predictions = relationship(
+        "Prediction",
+        back_populates="user"
+    )
+
+    tournament_prediction = relationship(
+        "TournamentPrediction",
+        back_populates="user",
+        uselist=False
+    )
+
 class Match(Base):
 
     __tablename__ = "matches"
@@ -123,6 +135,22 @@ class Match(Base):
         Boolean,
         default=False
     )
+    
+    is_visible = Column(
+    Boolean,
+    default=False,
+    nullable=False
+    )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
+    predictions = relationship(
+        "Prediction",
+        back_populates="match"
+    )
 
 class Prediction(Base):
 
@@ -142,7 +170,7 @@ class Prediction(Base):
 
     match_id = Column(
         Integer,
-        ForeignKey("matches.match_id"),
+        ForeignKey("matches.match_id", ondelete="CASCADE"),
         nullable=False
     )
 
@@ -159,6 +187,15 @@ class Prediction(Base):
     submitted_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+    user = relationship(
+        "User",
+        back_populates="predictions"
+    )
+
+    match = relationship(
+        "Match",
+        back_populates="predictions"
     )
 
     __table_args__ = (
@@ -197,6 +234,11 @@ class TournamentPrediction(Base):
     submitted_at = Column(
         DateTime,
         default=datetime.utcnow
+    )
+
+    user = relationship(
+        "User",
+        back_populates="tournament_prediction"
     )
 
 class ScoringRule(Base):

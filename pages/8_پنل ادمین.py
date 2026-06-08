@@ -1,12 +1,13 @@
 import streamlit as st
 
-from utils.auth_guard import require_login
+from utils.auth_guard import require_admin, require_login
 from utils.constants import ADMIN_NATIONAL_IDS, SESSION_USER_ID
 
 from database.connection import SessionLocal
 from database.models import User
 
 require_login()
+require_admin()
 
 if st.session_state.get("national_id") not in ADMIN_NATIONAL_IDS:
     st.error("دسترسی غیرمجاز")
