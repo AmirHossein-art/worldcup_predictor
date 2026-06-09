@@ -4,7 +4,6 @@ from utils.constants import (
     EXACT_SCORE_POINTS,
     WINNER_DIFF_POINTS,
     WINNER_ONLY_POINTS,
-    DRAW_ONLY_POINTS,
     QUALIFIED_TEAM_POINTS,
     CHAMPION_POINTS,
 )
@@ -34,7 +33,7 @@ with st.expander("🎯 نحوه محاسبه امتیازات", expanded=True):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.success(f"✅ **نتیجه دقیق (هم گل‌ها و هم برنده)**\n\n{EXACT_SCORE_POINTS} امتیاز")
+        st.success(f"✅ **نتیجه دقیق (تعداد گل‌های هر دو تیم دقیقاً درست باشد)**\n\n{EXACT_SCORE_POINTS} امتیاز")
         
     with col2:
         st.info(f"📊 **مثال:**\n\nپیش‌بینی: 2-1\n\nنتیجه واقعی: 2-1 ✓")
@@ -44,27 +43,30 @@ with st.expander("🎯 نحوه محاسبه امتیازات", expanded=True):
     col1, col2 = st.columns(2)
     
     with col1:
-        st.success(f"✅ **برنده + تفاضل گل‌ها**\n\n{WINNER_DIFF_POINTS} امتیاز")
+        st.success(f"✅ **نتیجه صحیح + تفاضل گل صحیح**\n\n{WINNER_DIFF_POINTS} امتیاز")
         
     with col2:
-        st.info(f"📊 **مثال:**\n\nپیش‌بینی: 2-0\n\nنتیجه واقعی: 3-1 ✓")
-    
+        st.info(
+            f"""📊 **مثال‌ها:**
+
+    **برد:**
+    پیش‌بینی: 2-0
+
+    نتیجه واقعی: 3-1 ✓
+
+    **تساوی:**
+    پیش‌بینی: 1-1
+
+    نتیجه واقعی: 2-2 ✓
+    """
+        )
+        
     st.divider()
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.warning(f"⚠️ **برابری (هر دو تیم)**\n\n{DRAW_ONLY_POINTS} امتیاز")
-        
-    with col2:
-        st.info(f"📊 **مثال:**\n\nپیش‌بینی: 1-1\n\nنتیجه واقعی: 2-2 ✓")
-    
-    st.divider()
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.warning(f"⚠️ **فقط برنده صحیح**\n\n{WINNER_ONLY_POINTS} امتیاز")
+        st.warning(f"⚠️ **فقط نتیجه/برنده صحیح**\n\n{WINNER_ONLY_POINTS} امتیاز")
         
     with col2:
         st.info(f"📊 **مثال:**\n\nپیش‌بینی: 2-0\n\nنتیجه واقعی: 1-0 ✓")
@@ -118,8 +120,7 @@ st.subheader("📊 خلاصه امتیازات")
 scores_data = {
     "📋 نوع": [
         "نتیجه دقیق",
-        "برنده + تفاضل",
-        "برابری",
+        "نتیجه صحیح + تفاضل گل",
         "فقط برنده",
         "تیم صعودکننده",
         "قهرمان جام"
@@ -127,7 +128,6 @@ scores_data = {
     "🎯 امتیاز": [
         EXACT_SCORE_POINTS,
         WINNER_DIFF_POINTS,
-        DRAW_ONLY_POINTS,
         WINNER_ONLY_POINTS,
         QUALIFIED_TEAM_POINTS,
         CHAMPION_POINTS
@@ -136,21 +136,15 @@ scores_data = {
 
 st.dataframe(scores_data, use_container_width=True, hide_index=True)
 
-total_possible = (
-    EXACT_SCORE_POINTS + 
-    CHAMPION_POINTS
-)
 
 st.info(
     f"""
     💡 **حداکثر امتیاز در یک مسابقه:**
-    
-    **برابری:**
-    - نتیجه برابری دقیق + صعودکننده درست = {DRAW_ONLY_POINTS} + {QUALIFIED_TEAM_POINTS} = {DRAW_ONLY_POINTS + QUALIFIED_TEAM_POINTS} امتیاز
-    
-    **برنده معین:**
-    - نتیجه دقیق (برنده + تفاضل) + صعودکننده خودکار = {EXACT_SCORE_POINTS} + {QUALIFIED_TEAM_POINTS} = {EXACT_SCORE_POINTS + QUALIFIED_TEAM_POINTS} امتیاز
-    
+
+    - نتیجه دقیق = {EXACT_SCORE_POINTS} امتیاز
+    - اگر مسابقه حذفی باشد و صعودکننده درست انتخاب شود:
+      {EXACT_SCORE_POINTS} + {QUALIFIED_TEAM_POINTS} = {EXACT_SCORE_POINTS + QUALIFIED_TEAM_POINTS} امتیاز
+
     💡 **حداکثر امتیاز قهرمانی:**
     - پیش‌بینی قهرمان = {CHAMPION_POINTS} امتیاز
     """
