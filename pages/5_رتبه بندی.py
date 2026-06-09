@@ -1,0 +1,194 @@
+import streamlit as st
+import pandas as pd
+
+from database.connection import SessionLocal
+from database.models import User
+
+from utils.auth_guard import require_login
+
+from services.scoring_service import (
+    calculate_user_score
+)
+
+# ==========================
+# Auth
+# ==========================
+
+require_login()
+
+# ==========================
+# Page
+# ==========================
+
+st.title("🏆 رتبه‌بندی کاربران")
+
+# ==========================
+# Database
+# ==========================
+
+db = SessionLocal()
+
+# ==========================
+# Load Users
+# ==========================
+
+users = (
+    db.query(User)
+    .filter(
+        User.is_verified == True
+    )
+    .all()
+)
+
+leaderboard = []
+
+for user in users:
+
+    score = calculate_user_score(
+        user.predictions
+    )
+
+    leaderboard.append(
+        {
+            "user": user,
+            "score": score
+        }
+    )
+
+# ==========================
+# Sort Leaderboard
+# ==========================
+
+leaderboard.sort(
+    key=lambda x: x["score"],
+    reverse=True
+)
+
+# ==========================
+# Build DataFrame
+# ==========================
+
+leaderboard_rows = []
+
+for rank, item in enumerate(
+    leaderboard,
+    start=1
+):
+
+    user = item["user"]
+
+    leaderboard_rows.append(
+        {
+            "رتبه": rank,
+            "نام": (
+                f"{user.first_name} "
+                f"{user.last_name}"
+            ),
+            "معاونت": user.department,
+            "امتیاز": item["score"]
+        }
+    )
+
+# ==========================
+# Full Ranking Table
+# ==========================
+
+st.subheader("📊 جدول رتبه‌بندی")
+
+if leaderboard_rows:
+
+    ranking_df = pd.DataFrame(
+        leaderboard_rows
+    )
+
+    st.dataframe(
+        ranking_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+else:
+
+    st.info(
+        "هنوز کاربر تاییدشده‌ای وجود ندارد."
+    )
+
+# ==========================
+# Top 3 Users
+# ==========================
+
+if leaderboard:
+
+    st.subheader(
+        "🏅 برترین کاربران"
+    )
+
+    top_users = leaderboard[:3]
+
+    columns = st.columns(
+        len(top_users)
+    )
+
+    medals = [
+        "🥇 نفر اول",
+        "🥈 نفر دوم",
+        "🥉 نفر سوم"
+    ]
+
+    for index, item in enumerate(
+        top_users
+    ):
+
+        user = item["user"]
+
+        with columns[index]:
+
+            st.metric(
+                medals[index],
+                (
+                    f"{user.first_name} "
+                    f"{user.last_name}"
+                ),
+                item["score"]
+            )
+
+    # ==========================
+    # Chart
+    # ==========================
+
+    chart_rows = []
+
+    for item in top_users:
+
+        user = item["user"]
+
+        chart_rows.append(
+            {
+                "نام": (
+                    f"{user.first_name} "
+                    f"{user.last_name}"
+                ),
+                "امتیاز": item["score"]
+            }
+        )
+
+    chart_df = (
+        pd.DataFrame(
+            chart_rows
+        )
+        .set_index("نام")
+    )
+
+    st.subheader(
+        "📈 مقایسه امتیاز نفرات برتر"
+    )
+
+    st.bar_chart(
+        chart_df["امتیاز"]
+    )
+
+# ==========================
+# Close DB
+# ==========================
+
+db.close()

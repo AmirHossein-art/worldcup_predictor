@@ -147,15 +147,16 @@ class Match(Base):
         default=datetime.utcnow
     )
 
-    predictions = relationship(
-        "Prediction",
-        back_populates="match"
-    )
-
     qualified_team = Column(
         String(100),
         nullable=True
     )
+
+    predictions = relationship(
+        "Prediction",
+        back_populates="match"
+    )
+   
 
 class Prediction(Base):
 

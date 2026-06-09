@@ -1,6 +1,15 @@
+from utils.constants import (
+    EXACT_SCORE_POINTS,
+    WINNER_DIFF_POINTS,
+    WINNER_ONLY_POINTS,
+    DRAW_ONLY_POINTS,
+    QUALIFIED_TEAM_POINTS
+)
+
+
 def get_match_result(
-    home_score,
-    away_score
+    home_score: int,
+    away_score: int
 ):
 
     if home_score > away_score:
@@ -11,11 +20,17 @@ def get_match_result(
 
     return "DRAW"
 
+
 def calculate_prediction_score(
     prediction,
     match
 ):
+
     score = 0
+
+    # ==========================
+    # Exact Score
+    # ==========================
 
     if (
         prediction.pred_home
@@ -25,30 +40,98 @@ def calculate_prediction_score(
         == match.away_score
     ):
 
-        score += 10
+        score += EXACT_SCORE_POINTS
 
-    elif (
-        get_match_result(
+    else:
+
+        predicted_result = get_match_result(
             prediction.pred_home,
             prediction.pred_away
         )
-        ==
-        get_match_result(
+
+        actual_result = get_match_result(
             match.home_score,
             match.away_score
         )
-    ):
 
-        score += 5
+        predicted_diff = (
+            prediction.pred_home
+            - prediction.pred_away
+        )
+
+        actual_diff = (
+            match.home_score
+            - match.away_score
+        )
+
+        # ==========================
+        # Winner + Goal Difference
+        # ==========================
+
+        if (
+            predicted_result == actual_result
+            and
+            predicted_diff == actual_diff
+        ):
+
+            score += WINNER_DIFF_POINTS
+
+        # ==========================
+        # Draw Only
+        # ==========================
+
+        elif (
+            predicted_result == "DRAW"
+            and
+            actual_result == "DRAW"
+        ):
+
+            score += DRAW_ONLY_POINTS
+
+        # ==========================
+        # Winner Only
+        # ==========================
+
+        elif predicted_result == actual_result:
+
+            score += WINNER_ONLY_POINTS
+
+    # ==========================
+    # Qualified Team
+    # ==========================
 
     if (
-        match.qualified_team
+        match.qualified_team is not None
         and
         prediction.pred_qualified_team
-        ==
-        match.qualified_team
+        is not None
+        and
+        prediction.pred_qualified_team
+        == match.qualified_team
     ):
 
-        score += 3
+        score += QUALIFIED_TEAM_POINTS
 
     return score
+
+def calculate_user_score(
+    predictions
+):
+
+    total_score = 0
+
+    for prediction in predictions:
+
+        match = prediction.match
+
+        if not match.result_entered:
+            continue
+
+        total_score += (
+            calculate_prediction_score(
+                prediction,
+                match
+            )
+        )
+
+    return total_score
