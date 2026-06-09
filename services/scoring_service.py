@@ -3,7 +3,11 @@ from utils.constants import (
     WINNER_DIFF_POINTS,
     WINNER_ONLY_POINTS,
     DRAW_ONLY_POINTS,
-    QUALIFIED_TEAM_POINTS
+    QUALIFIED_TEAM_POINTS,
+    TOURNAMENT_CHAMPION,
+    TOURNAMENT_RUNNER_UP,
+    CHAMPION_POINTS,
+    RUNNER_UP_POINTS
 )
 
 
@@ -115,12 +119,12 @@ def calculate_prediction_score(
     return score
 
 def calculate_user_score(
-    predictions
+    user
 ):
 
     total_score = 0
 
-    for prediction in predictions:
+    for prediction in user.predictions:
 
         match = prediction.match
 
@@ -134,4 +138,43 @@ def calculate_user_score(
             )
         )
 
+    tournament_score = 0
+
+    if user.tournament_prediction:
+
+        total_score += (
+            calculate_tournament_score(
+                user.tournament_prediction
+            )
+        )
+
     return total_score
+
+def calculate_tournament_score(
+    prediction
+):
+    score = 0
+    if (
+        TOURNAMENT_CHAMPION is None
+        or
+        TOURNAMENT_RUNNER_UP is None
+    ):
+
+        return 0
+    if (
+        prediction.champion
+        and
+        prediction.champion
+        ==
+        TOURNAMENT_CHAMPION
+    ):
+        score += CHAMPION_POINTS
+    if (
+        prediction.runner_up
+        and
+        prediction.runner_up
+        ==
+        TOURNAMENT_RUNNER_UP
+    ):
+        score += RUNNER_UP_POINTS
+    return score

@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 
 from database.connection import SessionLocal
 from database.models import User
@@ -45,7 +46,7 @@ leaderboard = []
 for user in users:
 
     score = calculate_user_score(
-        user.predictions
+        user
     )
 
     leaderboard.append(
@@ -183,9 +184,14 @@ if leaderboard:
         "📈 مقایسه امتیاز نفرات برتر"
     )
 
-    st.bar_chart(
-        chart_df["امتیاز"]
+    fig = px.bar(
+        chart_df.reset_index(),
+        x="امتیاز",
+        y="نام",
+        orientation="h",
+        labels={"امتیاز": "امتیاز", "نام": "نام"}
     )
+    st.plotly_chart(fig, use_container_width=True)
 
 # ==========================
 # Close DB
