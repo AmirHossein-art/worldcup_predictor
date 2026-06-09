@@ -93,10 +93,17 @@ def login_user(
         .first()
     )
 
+    
     if not user:
         raise ValueError(
             "Invalid national ID or password"
         )
+    
+    if not user.is_active:
+        raise Exception(
+            "حساب کاربری شما غیرفعال شده است."
+        )
+
     
     if not verify_password(
         password,

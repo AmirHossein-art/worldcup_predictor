@@ -27,6 +27,25 @@ for user in users:
     st.write(f"کد ملی: {user.national_id}")
     st.write(f"معاونت: {user.department}")
     st.write(f"وضعیت: {'تایید شده' if user.is_verified else 'در انتظار'}")
+    st.write(f"فعال: {'✅' if user.is_active else '❌'}")
+
+    if user.is_active:
+        if st.button(
+            f"🚫 غیرفعال کردن {user.national_id}",
+            key=f"deactivate_{user.user_id}"
+        ):
+            user.is_active = False
+            db.commit()
+            st.rerun()
+    else:
+        if st.button(
+            f"✅ فعال کردن {user.national_id}",
+            key=f"activate_{user.user_id}"
+        ):
+            user.is_active = True
+            db.commit()
+            st.rerun()
+
 
     if not user.is_verified:
 

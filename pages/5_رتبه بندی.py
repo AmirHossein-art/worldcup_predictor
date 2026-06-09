@@ -36,7 +36,8 @@ db = SessionLocal()
 users = (
     db.query(User)
     .filter(
-        User.is_verified == True
+        User.is_verified == True,
+        User.is_active == True
     )
     .all()
 )
