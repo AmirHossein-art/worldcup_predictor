@@ -82,7 +82,7 @@ if submit:
         db.close()
 
         st.switch_page(
-            "pages/3_داشبورد.py"
+            "pages/7_پیش بینی قهرمان جام.py"
         )
 
     except Exception as e:
