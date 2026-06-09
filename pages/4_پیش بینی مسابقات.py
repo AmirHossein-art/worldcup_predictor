@@ -38,6 +38,18 @@ if not matches:
 
 for match in matches:
 
+    if st.session_state.get(
+        f"saved_{match.match_id}",
+        False
+    ):
+        st.success(
+            "✅ پیش‌بینی ذخیره شد"
+        )
+
+        st.session_state[
+            f"saved_{match.match_id}"
+        ] = False
+
     existing = (
         db.query(Prediction)
         .filter(
@@ -141,9 +153,13 @@ for match in matches:
 
                     db.commit()
 
-                    st.success("تغییرات ذخیره شد")
+                    st.session_state[
+                        f"saved_{match.match_id}"
+                    ] = True
 
                     st.rerun()
+
+                    
 
             else:
 
@@ -167,44 +183,25 @@ for match in matches:
                         key=f"away_{match.match_id}"
                     )
 
-                    pred_qualified_team = None
+                pred_qualified_team = None
 
-                    if match.stage in KNOCKOUT_STAGES:
+                if match.stage in KNOCKOUT_STAGES:
 
-                        pred_qualified_team = st.radio(
-                            "🏆 تیم صعود کننده",
-                            [
-                                match.home_team,
-                                match.away_team
-                            ],
-                            horizontal=True,
-                            key=f"qualified_{match.match_id}"
-                        )
-                    if st.button(
-                        "✅ ثبت پیش‌بینی",
-                        key=f"submit_{match.match_id}",
-                        use_container_width=True
-                    ):
+                    pred_qualified_team = st.radio(
+                        "🏆 تیم صعود کننده",
+                        [
+                            match.home_team,
+                            match.away_team
+                        ],
+                        horizontal=True,
+                        key=f"qualified_{match.match_id}"
+                    )
 
-                        new_prediction = Prediction(
-                            user_id=st.session_state[
-                                SESSION_USER_ID
-                            ],
-                            match_id=match.match_id,
-                            pred_home=home_pred,
-                            pred_away=away_pred,
-                            pred_qualified_team=pred_qualified_team
-                        )
-
-                        db.add(new_prediction)
-
-                        db.commit()
-
-                        st.success(
-                            "پیش‌بینی ثبت شد"
-                        )
-
-                        st.rerun()           
+                if st.button(
+                    "✅ ثبت پیش‌بینی",
+                    key=f"submit_{match.match_id}",
+                    use_container_width=True
+                ):
 
                     new_prediction = Prediction(
                         user_id=st.session_state[
@@ -216,15 +213,13 @@ for match in matches:
                         pred_qualified_team=pred_qualified_team
                     )
 
-                    db.add(
-                        new_prediction
-                    )
+                    db.add(new_prediction)
 
                     db.commit()
 
-                    st.success(
-                        "✅ پیش‌بینی ثبت شد"
-                    )
+                    st.session_state[
+                        f"saved_{match.match_id}"
+                    ] = True
 
                     st.rerun()
 

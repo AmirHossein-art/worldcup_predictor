@@ -51,21 +51,34 @@ if st.button(
         "pages/6_پروفایل من.py"
     )
 
+if st.button(
+    "⚽ پیش‌بینی مسابقات",
+    use_container_width=True
+):
+    st.switch_page(
+        "pages/4_پیش بینی مسابقات.py"
+    )
 
-st.button(
-    "⚽ پیش‌بینی بازی‌ها",
-    use_container_width=True,
-    disabled=True
-)
+if st.button(
+    "🏆 پیش‌بینی قهرمان جام",
+    use_container_width=True
+):
+    st.switch_page(
+        "pages/7_ پیش بینی قهرمان جام.py"
+    )
 
-st.button(
-    "🏆 پیش‌بینی قهرمان",
-    use_container_width=True,
-    disabled=True
-)
-
-st.button(
+if st.button(
     "📊 رتبه‌بندی",
-    use_container_width=True,
-    disabled=True
-)
+    use_container_width=True
+):
+    st.switch_page(
+        "pages/5_رتبه بندی.py"
+    )
+
+if st.button(
+    "📋 پیش‌بینی‌های من",
+    use_container_width=True
+):
+    st.switch_page(
+        "pages/8_پیش بینی های من.py"
+    )
