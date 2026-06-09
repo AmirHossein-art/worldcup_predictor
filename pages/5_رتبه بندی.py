@@ -11,6 +11,10 @@ from services.scoring_service import (
     calculate_user_score
 )
 
+from utils.user_helpers import (
+    get_user_champion_display
+)
+
 # ==========================
 # Auth
 # ==========================
@@ -94,6 +98,7 @@ for rank, item in enumerate(
                 f"{user.last_name}"
             ),
             "معاونت": user.department,
+            "🏆 قهرمان": get_user_champion_display(user),
             "امتیاز": item["score"]
         }
     )
