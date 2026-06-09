@@ -82,3 +82,11 @@ if st.button(
     st.switch_page(
         "pages/8_پیش بینی های من.py"
     )
+
+if st.button(
+    "📖 قوانین و امتیازدهی",
+    use_container_width=True
+):
+    st.switch_page(
+        "pages/9_قوانین و امتیازدهی.py"
+    )
