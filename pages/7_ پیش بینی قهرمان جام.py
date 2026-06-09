@@ -44,7 +44,6 @@ team_options = list(
 )
 
 champion_index = 0
-runner_up_index = 0
 
 if existing:
 
@@ -53,15 +52,6 @@ if existing:
             existing.champion
         )
         if existing.champion
-        in team_options
-        else 0
-    )
-
-    runner_up_index = (
-        team_options.index(
-            existing.runner_up
-        )
-        if existing.runner_up
         in team_options
         else 0
     )
@@ -75,29 +65,15 @@ with st.form(
         index=champion_index
     )
 
-    runner_up = st.selectbox(
-        "🥈 نایب قهرمان",
-        team_options,
-        index=runner_up_index
-    )
-
     submitted = st.form_submit_button(
         "ذخیره پیش‌بینی",
         use_container_width=True
     )
 
 if submitted:
-    if champion == runner_up:
-
-        st.error(
-            "قهرمان و نایب‌قهرمان نمی‌توانند یکسان باشند"
-        )
-
-    elif existing:
+    if existing:
 
         existing.champion = champion
-
-        existing.runner_up = runner_up
 
         db.commit()
 
@@ -114,8 +90,7 @@ if submitted:
                 user_id=st.session_state[
                     SESSION_USER_ID
                 ],
-                champion=champion,
-                runner_up=runner_up
+                champion=champion
             )
         )
 
@@ -146,21 +121,9 @@ if existing:
         )
     )
 
-    runner_flag = (
-        TEAMS_FLAGS.get(
-            existing.runner_up,
-            ""
-        )
-    )
-
     st.success(
         f"🏆 {champion_flag} "
         f"{existing.champion}"
-    )
-
-    st.info(
-        f"🥈 {runner_flag} "
-        f"{existing.runner_up}"
     )
 
 db.close()

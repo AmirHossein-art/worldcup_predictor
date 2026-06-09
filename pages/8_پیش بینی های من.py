@@ -35,29 +35,15 @@ if tournament_prediction:
 
     st.subheader("🏆 پیش‌بینی قهرمان جام")
 
-    col1, col2 = st.columns(2)
-
     champion_flag = TEAMS_FLAGS.get(
         tournament_prediction.champion,
         ""
     )
 
-    runner_up_flag = TEAMS_FLAGS.get(
-        tournament_prediction.runner_up,
-        ""
+    st.success(
+        f"🥇 قهرمان\n\n"
+        f"{champion_flag} {tournament_prediction.champion}"
     )
-
-    with col1:
-        st.success(
-            f"🥇 قهرمان\n\n"
-            f"{champion_flag} {tournament_prediction.champion}"
-        )
-
-    with col2:
-        st.info(
-            f"🥈 نایب‌قهرمان\n\n"
-            f"{runner_up_flag} {tournament_prediction.runner_up}"
-        )
 
     st.divider()
 

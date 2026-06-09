@@ -239,10 +239,6 @@ class TournamentPrediction(Base):
         String(100),        
     )
 
-    runner_up = Column(
-        String(100),
-    )
-
     submitted_at = Column(
         DateTime,
         default=datetime.utcnow

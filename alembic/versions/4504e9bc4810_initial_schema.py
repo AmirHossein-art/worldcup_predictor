@@ -80,7 +80,6 @@ def upgrade() -> None:
     sa.Column('prediction_id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('champion', sa.String(length=100), nullable=True),
-    sa.Column('runner_up', sa.String(length=100), nullable=True),
     sa.Column('submitted_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('prediction_id'),

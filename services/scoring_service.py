@@ -5,9 +5,7 @@ from utils.constants import (
     DRAW_ONLY_POINTS,
     QUALIFIED_TEAM_POINTS,
     TOURNAMENT_CHAMPION,
-    TOURNAMENT_RUNNER_UP,
-    CHAMPION_POINTS,
-    RUNNER_UP_POINTS
+    CHAMPION_POINTS
 )
 
 
@@ -156,8 +154,6 @@ def calculate_tournament_score(
     score = 0
     if (
         TOURNAMENT_CHAMPION is None
-        or
-        TOURNAMENT_RUNNER_UP is None
     ):
 
         return 0
@@ -169,12 +165,4 @@ def calculate_tournament_score(
         TOURNAMENT_CHAMPION
     ):
         score += CHAMPION_POINTS
-    if (
-        prediction.runner_up
-        and
-        prediction.runner_up
-        ==
-        TOURNAMENT_RUNNER_UP
-    ):
-        score += RUNNER_UP_POINTS
     return score
