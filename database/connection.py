@@ -12,6 +12,11 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+print(
+    "DATABASE_URL FOUND:",
+    DATABASE_URL is not None
+)
+
 if DATABASE_URL:
 
     DB_MODE = "NEON"
