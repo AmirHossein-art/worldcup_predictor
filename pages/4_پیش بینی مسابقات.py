@@ -14,6 +14,12 @@ from utils.constants import SESSION_USER_ID
 
 from config.stages import KNOCKOUT_STAGES
 
+from utils.time_utils import (
+    format_shamsi_datetime,
+    iran_to_utc,
+    utc_to_iran
+)
+
 require_login()
 
 db = SessionLocal()
@@ -99,7 +105,7 @@ for match in matches:
         )
 
         st.write(
-            f"🕒 {match.kickoff_time}"
+            f"🕒 {format_shamsi_datetime(match.kickoff_time)}"
         )
 
         prediction_open = can_predict(

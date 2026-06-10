@@ -17,9 +17,9 @@ from utils.constants import (
 )
 
 from utils.time_utils import (
+    format_shamsi_datetime,
     iran_to_utc,
-    utc_to_iran,
-    format_iran_datetime
+    utc_to_iran
 )
 
 
@@ -104,7 +104,7 @@ with st.form("add_match_form"):
 
         else:
 
-            kickoff_time_utc = iran_to_utc(
+            kickoff_time_utc =  iran_to_utc(
                 kickoff_time
             )
 
@@ -185,7 +185,7 @@ else:
             )
 
             st.write(
-                f"🕒 {format_iran_datetime(match.kickoff_time)}"
+                f"🕒 {format_shamsi_datetime(match.kickoff_time)}"
             )
 
             visibility = (

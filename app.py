@@ -4,7 +4,6 @@ from utils.constants import (
     EXACT_SCORE_POINTS,
     WINNER_DIFF_POINTS,
     WINNER_ONLY_POINTS,
-    DRAW_ONLY_POINTS,
     QUALIFIED_TEAM_POINTS,
     CHAMPION_POINTS,
 )
@@ -25,7 +24,6 @@ with st.expander("⚽ امتیازات مسابقات"):
     st.markdown(f"""
     - **نتیجه دقیق:** {EXACT_SCORE_POINTS} امتیاز
     - **تیم برنده + تفاضل گل:** {WINNER_DIFF_POINTS} امتیاز
-    - **برابری:** {DRAW_ONLY_POINTS} امتیاز
     - **تیم برنده:** {WINNER_ONLY_POINTS} امتیاز
     - **تیم صعودکننده:** {QUALIFIED_TEAM_POINTS} امتیاز (فقط در برابری و حذفی)
     """)
