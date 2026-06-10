@@ -16,6 +16,12 @@ from utils.constants import (
     SESSION_NATIONAL_ID
 )
 
+from utils.time_utils import (
+    iran_to_utc,
+    utc_to_iran,
+    format_iran_datetime
+)
+
 
 # ==========================
 # Auth
@@ -98,11 +104,15 @@ with st.form("add_match_form"):
 
         else:
 
+            kickoff_time_utc = iran_to_utc(
+                kickoff_time
+            )
+
             new_match = Match(
                 home_team=home_team,
                 away_team=away_team,
                 stage=stage,
-                kickoff_time=kickoff_time
+                kickoff_time=kickoff_time_utc
             )
 
             db.add(new_match)
@@ -169,9 +179,13 @@ else:
             st.write(
                 f"🏆 {match.stage}"
             )
+            
+            iran_time = utc_to_iran(
+                match.kickoff_time
+            )
 
             st.write(
-                f"🕒 {match.kickoff_time}"
+                f"🕒 {format_iran_datetime(match.kickoff_time)}"
             )
 
             visibility = (
