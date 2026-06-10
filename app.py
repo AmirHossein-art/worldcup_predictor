@@ -23,8 +23,8 @@ st.write(
 with st.expander("⚽ امتیازات مسابقات"):
     st.markdown(f"""
     - **نتیجه دقیق:** {EXACT_SCORE_POINTS} امتیاز
-    - **تیم برنده + تفاضل گل:** {WINNER_DIFF_POINTS} امتیاز
-    - **تیم برنده:** {WINNER_ONLY_POINTS} امتیاز
+    - **نتیجه صحیح + تفاضل گل صحیح:** {WINNER_DIFF_POINTS} امتیاز
+    - **نتیجه صحیح (فقط):** {WINNER_ONLY_POINTS} امتیاز
     - **تیم صعودکننده:** {QUALIFIED_TEAM_POINTS} امتیاز (فقط در برابری و حذفی)
     """)
 
