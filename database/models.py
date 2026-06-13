@@ -281,3 +281,17 @@ class Admin(Base):
     password_hash = Column(
         String(255)
     )
+
+class SystemSettings(Base):
+
+    __tablename__ = "system_settings"
+
+    id = Column(
+        Integer,
+        primary_key=True
+    )
+
+    champion_deadline = Column(
+        DateTime,
+        nullable=True
+    )

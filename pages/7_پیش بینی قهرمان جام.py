@@ -1,4 +1,5 @@
 import streamlit as st
+from datetime import datetime
 
 # Background image
 from utils.background import get_base64
@@ -33,6 +34,14 @@ from database.models import (
     TournamentPrediction
 )
 
+from utils.system_settings import (
+    get_system_settings
+)
+
+from utils.time_utils import (
+    format_shamsi_datetime
+)
+
 from config.teams import (
     TEAMS_FLAGS
 )
@@ -59,6 +68,7 @@ st.info(
 )
 
 db = SessionLocal()
+settings = get_system_settings(db)
 
 existing = (
     db.query(
@@ -73,6 +83,54 @@ existing = (
     )
     .first()
 )
+
+champion_locked = False
+
+if (
+    settings.champion_deadline
+    and
+    datetime.utcnow()
+    >=
+    settings.champion_deadline
+):
+
+    champion_locked = True
+
+if settings.champion_deadline:
+
+    st.info(
+        f"⏰ مهلت نهایی انتخاب قهرمان: "
+        f"{format_shamsi_datetime(settings.champion_deadline)}"
+    )
+
+    remaining = (
+        settings.champion_deadline
+        -
+        datetime.utcnow()
+    )
+
+    if remaining.total_seconds() > 0:
+
+        total_seconds = int(
+            remaining.total_seconds()
+        )
+
+        days = total_seconds // 86400
+
+        hours = (
+            total_seconds % 86400
+        ) // 3600
+
+        minutes = (
+            total_seconds % 3600
+        ) // 60
+
+        st.warning(
+            f"⚠️ فقط {days} روز، "
+            f"{hours} ساعت و "
+            f"{minutes} دقیقه "
+            f"تا بسته شدن امکان انتخاب قهرمان باقی مانده است."
+        )
 
 team_options = list(
     TEAMS_FLAGS.keys()
@@ -90,6 +148,35 @@ if existing:
         in team_options
         else 0
     )
+
+if champion_locked:
+
+    st.error(
+        "⛔ مهلت انتخاب یا ویرایش قهرمان به پایان رسیده است."
+    )
+
+    if existing:
+
+        champion_flag = TEAMS_FLAGS.get(
+            existing.champion,
+            ""
+        )
+
+        st.success(
+            f"🏆 انتخاب فعلی شما: "
+            f"{champion_flag} "
+            f"{existing.champion}"
+        )
+
+    else:
+
+        st.info(
+            "شما قبل از پایان مهلت، قهرمانی انتخاب نکرده‌اید."
+        )
+
+    db.close()
+
+    st.stop()
 
 with st.form(
     "tournament_prediction"

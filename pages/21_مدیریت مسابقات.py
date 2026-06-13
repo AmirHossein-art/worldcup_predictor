@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import streamlit as st
 
@@ -32,6 +32,7 @@ st.markdown(
 
 from database.connection import SessionLocal
 from database.models import Match
+from utils.system_settings import get_system_settings
 
 from config.stages import STAGES
 from config.teams import TEAMS_FLAGS
@@ -75,13 +76,106 @@ st.caption(
 # ==========================
 
 db = SessionLocal()
-
+settings = get_system_settings(db)
 
 # ==========================
 # Team Options
 # ==========================
 
 team_options = list(TEAMS_FLAGS.keys())
+
+# ==========================
+# Champion Prediction Lock
+# ==========================
+
+st.divider()
+
+st.subheader("🏆 مدیریت پیش‌بینی قهرمان جام")
+
+hours = st.number_input(
+    "مهلت بسته شدن از الان، به ساعت",
+    min_value=1,
+    max_value=168,
+    value=24
+)
+
+if settings.champion_deadline is None:
+
+    if st.button(
+        "🔒 تنظیم مهلت بسته شدن",
+        use_container_width=True
+    ):
+
+        settings.champion_deadline = (
+            datetime.utcnow()
+            +
+            timedelta(hours=hours)
+        )
+
+        db.commit()
+
+        st.success(
+            "مهلت بسته شدن پیش‌بینی قهرمان تنظیم شد."
+        )
+
+        st.rerun()
+
+else:
+
+    st.info(
+        f"⏰ مهلت فعلی: "
+        f"{format_shamsi_datetime(settings.champion_deadline)}"
+    )
+
+    remaining = (
+        settings.champion_deadline
+        -
+        datetime.utcnow()
+    )
+
+    if remaining.total_seconds() > 0:
+
+        total_seconds = int(
+            remaining.total_seconds()
+        )
+
+        days = total_seconds // 86400
+
+        hours_left = (
+            total_seconds % 86400
+        ) // 3600
+
+        minutes_left = (
+            total_seconds % 3600
+        ) // 60
+
+        st.warning(
+            f"⏳ {days} روز، "
+            f"{hours_left} ساعت و "
+            f"{minutes_left} دقیقه "
+            f"تا بسته شدن باقی مانده است."
+        )
+
+    else:
+
+        st.error(
+            "⛔ مهلت پیش‌بینی قهرمان تمام شده است."
+        )
+
+    if st.button(
+        "🔓 باز کردن دوباره پیش‌بینی قهرمان",
+        use_container_width=True
+    ):
+
+        settings.champion_deadline = None
+
+        db.commit()
+
+        st.success(
+            "پیش‌بینی قهرمان دوباره فعال شد."
+        )
+
+        st.rerun()
 
 
 # ==========================
