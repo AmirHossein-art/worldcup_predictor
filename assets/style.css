@@ -1,0 +1,33 @@
+.stApp {
+
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,0.45),
+            rgba(0,0,0,0.45)
+        ),
+        url("assets/background.jpg");
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-repeat: no-repeat;
+
+    background-attachment: fixed;
+}
+
+/* فقط باکس‌های Info */
+
+div[data-baseweb="notification"][kind="info"] {
+
+    background: rgba(18, 48, 24, 0.82) !important;
+
+    border-left: 5px solid #4CAF50 !important;
+
+    border-radius: 12px !important;
+}
+
+div[data-baseweb="notification"][kind="info"] * {
+
+    color: white !important;
+}
