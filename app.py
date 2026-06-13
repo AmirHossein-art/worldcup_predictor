@@ -1,4 +1,40 @@
 import streamlit as st
+from utils.background import get_base64
+from pathlib import Path
+
+css_path = Path("assets/style.css")
+
+with open(css_path, encoding="utf-8") as f:
+    st.markdown(
+        f"<style>{f.read()}</style>",
+        unsafe_allow_html=True
+    )
+
+img = get_base64("assets/background.png")
+
+st.markdown(
+f"""
+<style>
+
+.stApp {{
+
+    background-image:
+        linear-gradient(
+            rgba(0,0,0,0.45),
+            rgba(0,0,0,0.45)
+        ),
+        url("data:image/png;base64,{img}");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}}
+
+</style>
+""",
+unsafe_allow_html=True
+)
 
 from utils.constants import (
     EXACT_SCORE_POINTS,

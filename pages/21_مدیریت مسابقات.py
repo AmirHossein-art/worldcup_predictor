@@ -2,6 +2,34 @@ from datetime import datetime
 
 import streamlit as st
 
+# Background image
+from utils.background import get_base64
+
+img = get_base64("assets/background.png")
+
+st.markdown(
+    f"""
+    <style>
+
+    .stApp {{
+        background-image:
+            linear-gradient(
+                rgba(0,0,0,0.45),
+                rgba(0,0,0,0.45)
+            ),
+            url("data:image/jpeg;base64,{img}");
+
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }}
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 from database.connection import SessionLocal
 from database.models import Match
 
