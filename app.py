@@ -44,11 +44,15 @@ from utils.constants import (
     CHAMPION_POINTS,
 )
 
+from utils.ui import load_main_css
+
 st.set_page_config(
     page_title="World Cup Predictor",
     page_icon="⚽",
     layout="centered",
 )
+
+load_main_css()
 
 st.title("🏆 مسابقه پیش‌بینی جام جهانی 2026")
 

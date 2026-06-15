@@ -28,14 +28,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-from utils.auth_guard import require_admin, require_login
+from utils.auth_guard import require_admin, require_login, require_password_change_if_needed
 from utils.constants import ADMIN_NATIONAL_IDS, SESSION_USER_ID
 
 from database.connection import SessionLocal
 from database.models import User
+from services.auth_service import hash_password
 
 require_login()
 require_admin()
+require_password_change_if_needed()
 
 if st.session_state.get("national_id") not in ADMIN_NATIONAL_IDS:
     st.error("دسترسی غیرمجاز")
@@ -73,6 +75,64 @@ for user in users:
             user.is_active = True
             db.commit()
             st.rerun()
+
+    with st.expander(
+        f"ریست رمز عبور{user.first_name}{user.last_name}"
+    ):
+
+        new_password = st.text_input(
+            "رمز جدید موقت",
+            type="password",
+            key=f"new_password_{user.user_id}"
+        )
+
+        confirm_password = st.text_input(
+            "تکرار رمز جدید موقت",
+            type="password",
+            key=f"confirm_password_{user.user_id}"
+        )
+
+        force_change = st.checkbox(
+            "کاربر بعد از ورود مجبور به تغییر رمز شود",
+            value=True,
+            key=f"force_change_{user.user_id}"
+        )
+
+        if st.button(
+            f"ذخیره رمز جدید برای {user.national_id}",
+            key=f"reset_password_{user.user_id}"
+        ):
+            if not new_password:
+
+                st.error(
+                    "رمز موقت را وارد کنید"
+                )
+
+            elif len(new_password) < 6:
+                st.error(
+                    "رمز موقت باید حداقل ۶ کاراکتر باشد"
+                )
+
+            elif new_password != confirm_password:
+                st.error(
+                    "رمز موقت و تکرار آن یکسان نیستند"
+                )
+
+            else:
+
+                user.password_hash = hash_password(
+                    new_password
+                )
+
+                user.must_change_password = force_change
+
+                db.commit()
+
+                st.success(
+                    "رمز عبور کاربر با موفقیت ریست شد"
+                )
+
+                st.rerun()
 
 
     if not user.is_verified:

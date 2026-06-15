@@ -1,0 +1,42 @@
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Vazirmatn";
+    src: url("../fonts/Vazirmatn-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-style: normal;
+}
+
+.stApp,
+.stApp input,
+.stApp textarea,
+.stApp button,
+.stApp label{
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+.stMarkdown,
+.stMarkdown p,
+.stMarkdown h1,
+.stMarkdown h2,
+.stMarkdown h3,
+.stMarkdown h4,
+.stMarkdown h5,
+.stMarkdown h6{
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+[data-testid="stMetric"],
+[data-testid="stMetric"] * {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+[data-testid="stDataFrame"],
+[data-testid="stTable"] * {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}

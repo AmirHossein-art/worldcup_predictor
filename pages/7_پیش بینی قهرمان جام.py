@@ -42,12 +42,14 @@ from utils.time_utils import (
     format_shamsi_datetime
 )
 
-from config.teams import (
-    TEAMS_FLAGS
+from utils.teams import (
+    get_team_names,
+    get_flag_path
 )
 
 from utils.auth_guard import (
-    require_login
+    require_login,
+    require_password_change_if_needed
 )
 
 from utils.constants import (
@@ -56,16 +58,12 @@ from utils.constants import (
 
 require_login()
 
+require_password_change_if_needed()
+
 st.title(
     "🏆 پیش‌بینی قهرمان جام"
 )
 
-st.info(
-    """
-⚠️ پیش‌بینی قهرمان جام یک‌بار ثبت می‌شود و می‌توانید **قبل از شروع اولین بازی** آن را تغییر دهید.
-
-"""
-)
 
 db = SessionLocal()
 settings = get_system_settings(db)
@@ -132,9 +130,7 @@ if settings.champion_deadline:
             f"تا بسته شدن امکان انتخاب قهرمان باقی مانده است."
         )
 
-team_options = list(
-    TEAMS_FLAGS.keys()
-)
+team_options = get_team_names()
 
 champion_index = 0
 
@@ -157,16 +153,23 @@ if champion_locked:
 
     if existing:
 
-        champion_flag = TEAMS_FLAGS.get(
-            existing.champion,
-            ""
+        st.success(
+            f"🏆انتخاب فعلی شما: {existing.champion}"
         )
 
-        st.success(
-            f"🏆 انتخاب فعلی شما: "
-            f"{champion_flag} "
-            f"{existing.champion}"
+        existing_flag_path = get_flag_path(
+            existing.champion
         )
+
+        if (
+            existing_flag_path
+            and
+            existing_flag_path.exists()
+        ):
+            st.image(
+                str(existing_flag_path),
+                width=64
+            )
 
     else:
 
@@ -187,10 +190,28 @@ with st.form(
         index=champion_index
     )
 
-    submitted = st.form_submit_button(
-        "ذخیره پیش‌بینی",
-        use_container_width=True
+    champion_flag_path = get_flag_path(
+        champion
     )
+
+    if (
+        champion_flag_path
+        and
+        champion_flag_path.exists()
+    ):
+        st.image(
+            str(champion_flag_path),
+            width=56
+        )
+
+        st.caption(
+            f"تیم انتخاب شده: {champion}"
+        )
+
+        submitted = st.form_submit_button(
+            "ذخیره پیش‌بینی",
+            use_container_width=True
+        )
 
 if submitted:
     if existing:
@@ -236,16 +257,22 @@ if existing:
         "پیش‌بینی فعلی شما"
     )
 
-    champion_flag = (
-        TEAMS_FLAGS.get(
-            existing.champion,
-            ""
-        )
+    st.success(
+        f"🏆{existing.champion}"
     )
 
-    st.success(
-        f"🏆 {champion_flag} "
-        f"{existing.champion}"
+    existing_flag_path = get_flag_path(
+        existing.champion
     )
+
+    if (
+        existing_flag_path
+        and
+        existing_flag_path.exists()
+    ):
+        st.image(
+            str(existing_flag_path),
+            width=64
+        )
 
 db.close()

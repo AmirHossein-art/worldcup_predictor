@@ -13,7 +13,8 @@ from utils.constants import (
     SESSION_FIRST_NAME,
     SESSION_LAST_NAME,
     SESSION_DEPARTMENT,
-    SESSION_IS_VERIFIED
+    SESSION_IS_VERIFIED,
+    SESSION_MUST_CHANGE_PASSWORD
 )
 from utils.validators import normalize_digits
 
@@ -75,11 +76,22 @@ if submit:
             SESSION_NATIONAL_ID
         ] = user.national_id
 
+        st.session_state[
+            SESSION_MUST_CHANGE_PASSWORD
+        ] = user.must_change_password
+
         st.success(
             "ورود موفقیت‌آمیز بود."
         )
 
+        must_change_password = user.must_change_password
+
         db.close()
+
+        if must_change_password:
+            st.switch_page(
+                "pages/22_تغییر رمز عبور.py"
+            )
 
         st.switch_page(
             "pages/7_پیش بینی قهرمان جام.py"

@@ -4,7 +4,8 @@ from streamlit import session_state
 
 from utils.constants import (
     ADMIN_NATIONAL_IDS,
-    SESSION_NATIONAL_ID
+    SESSION_NATIONAL_ID,
+    SESSION_MUST_CHANGE_PASSWORD
 )
 
 
@@ -50,3 +51,12 @@ def require_admin():
         )
 
         st.stop()
+
+def require_password_change_if_needed():
+    if st.session_state.get(
+        SESSION_MUST_CHANGE_PASSWORD,
+        False
+    ):
+        st.switch_page(
+            "pages/22_تغییر رمز عبور.py"
+        )

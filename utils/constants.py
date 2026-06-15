@@ -11,10 +11,14 @@ SESSION_DEPARTMENT = "department"
 
 SESSION_IS_VERIFIED = "is_verified"
 
+SESSION_MUST_CHANGE_PASSWORD = "must_change_password"
+
 SESSION_NATIONAL_ID = "national_id"
 
 ADMIN_NATIONAL_IDS = [
-    "0312322887"
+    "0312322887",
+    "0521177766",
+    "0021996385"
 ]
 
 # Scoring system

@@ -5,7 +5,7 @@ import plotly.express as px
 from database.connection import SessionLocal
 from database.models import User
 
-from utils.auth_guard import require_login
+from utils.auth_guard import require_login, require_password_change_if_needed
 
 from services.scoring_service import (
     calculate_user_score
@@ -20,6 +20,8 @@ from utils.user_helpers import (
 # ==========================
 
 require_login()
+
+require_password_change_if_needed()
 
 # ==========================
 # Page
@@ -53,7 +55,7 @@ users = (
     .all()
 )
 
-leaderboard = []
+all_users_scores = []
 
 for user in users:
 
@@ -61,12 +63,19 @@ for user in users:
         user
     )
 
-    leaderboard.append(
+    all_users_scores.append(
         {
             "user": user,
             "score": score
         }
     )
+
+# فقط کاربرانی که امتیاز گرفته اند
+leaderboard = [
+    item
+    for item in all_users_scores
+    if item["score"] > 0
+]
 
 # ==========================
 # Sort Leaderboard
@@ -78,21 +87,37 @@ leaderboard.sort(
 )
 
 # ==========================
+# Asign Ranks With Ties
+# ==========================
+
+last_score = None
+current_rank = 0
+
+for index, item in enumerate(
+    leaderboard,
+    start=1
+):
+    if item["score"] != last_score:
+
+        current_rank = index
+        last_score = item["score"]
+    
+    item["rank"] = current_rank
+
+
+# ==========================
 # Build DataFrame
 # ==========================
 
 leaderboard_rows = []
 
-for rank, item in enumerate(
-    leaderboard,
-    start=1
-):
+for item in leaderboard:
 
     user = item["user"]
 
     leaderboard_rows.append(
         {
-            "رتبه": rank,
+            "رتبه": item["rank"],
             "نام": (
                 f"{user.first_name} "
                 f"{user.last_name}"
@@ -123,9 +148,19 @@ if leaderboard_rows:
 
 else:
 
-    st.info(
-        "هنوز کاربر تاییدشده‌ای وجود ندارد."
-    )
+    if users:
+        st.info(
+            "هنوز هیچ کاربری امتیاز نگرفته است. رتبه‌بندی بعد از ثبت نتایج مسابقات نمایش داده می شود."
+        )
+
+    else:
+
+        st.info(
+            "هنوز کاربر تایید شده‌ای وجود ندارد."
+        )
+
+
+    
 
 # ==========================
 # Top 3 Users
@@ -137,17 +172,21 @@ if leaderboard:
         "🏅 برترین کاربران"
     )
 
-    top_users = leaderboard[:3]
+    top_users = [
+        item
+        for item in leaderboard
+        if item["rank"] <= 3
+    ]
 
     columns = st.columns(
         len(top_users)
     )
 
-    medals = [
-        "🥇 نفر اول",
-        "🥈 نفر دوم",
-        "🥉 نفر سوم"
-    ]
+    medals = {
+        1: "🥇 نفر اول",
+        2: "🥈 نفر دوم",
+        3: "🥉 نفر سوم"
+    }
 
     for index, item in enumerate(
         top_users
@@ -158,9 +197,12 @@ if leaderboard:
         with columns[index]:
 
             st.metric(
-                medals[index],
+                medals.get(
+                    item["rank"],
+                    f"رتبه {item["rank"]}"
+                ),
                 (
-                    f"{user.first_name} "
+                    f"{user.first_name}"
                     f"{user.last_name}"
                 ),
                 item["score"]

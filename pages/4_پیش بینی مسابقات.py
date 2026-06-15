@@ -35,9 +35,9 @@ from utils.date_utils import can_predict
 from database.connection import SessionLocal
 from database.models import Match, Prediction
 
-from config.teams import TEAMS_FLAGS
+from utils.team_ui import show_team_block
 
-from utils.auth_guard import require_login
+from utils.auth_guard import require_login, require_password_change_if_needed
 from utils.constants import SESSION_USER_ID
 
 from config.stages import KNOCKOUT_STAGES
@@ -50,17 +50,17 @@ from utils.time_utils import (
 
 require_login()
 
+require_password_change_if_needed()
+
 db = SessionLocal()
 
 st.title("⚽ پیش‌بینی مسابقات")
 
 st.info(
     """
-⚠️ امتیازدهی مسابقات فقط بر اساس نتیجه پایان ۹۰ دقیقه قانونی انجام می‌شود.
+⚠️ ثبت پیش‌بینی تا قبل از شروع بازی امکان پذیر است.
 
-🏆 **صعودکننده در مسابقات حذفی:**
-- اگر نتیجه **برابری** است: صعودکننده را **دستی انتخاب کنید** (3 امتیاز)
-- اگر **برنده معین** است: صعودکننده **خودکار برنده** است (اگر نتیجه درست باشد)
+⚠️ امتیازدهی مسابقات فقط بر اساس نتیجه پایان ۹۰ دقیقه قانونی انجام می‌شود.
 
 👉 **برای توضیحات کامل تر درباره سیستم امتیازدهی و قوانین مهم، 
     به صفحه «قوانین و امتیازدهی» مراجعه کنید.**
@@ -106,27 +106,30 @@ for match in matches:
         .first()
     )
 
-    home_flag = TEAMS_FLAGS.get(
-        match.home_team,
-        ""
-    )
-
-    away_flag = TEAMS_FLAGS.get(
-        match.away_team,
-        ""
-    )
 
     with st.container(border=True):
 
-        st.markdown(
-            f"""
-            ### {home_flag} {match.home_team}
-
-            **VS**
-
-            ### {away_flag} {match.away_team}
-            """
+        match_col1, match_col2, match_col3 = st.columns(
+            [4,1,4],
+            vertical_alignment="center"
         )
+
+        with match_col1:
+            show_team_block(
+                match.home_team,
+                width=46
+            )
+
+        with match_col2:
+            st.markdown(
+                "### VS"
+            )
+
+        with match_col3:
+            show_team_block(
+                match.away_team,
+                width=46
+            )
 
         st.write(
             f"🏆 {match.stage}"

@@ -35,9 +35,12 @@ from database.models import Match
 from utils.system_settings import get_system_settings
 
 from config.stages import STAGES
-from config.teams import TEAMS_FLAGS
+from utils.teams import (
+    get_team_names
+)
+from utils.team_ui import show_team_block
 
-from utils.auth_guard import require_login, require_admin
+from utils.auth_guard import require_login, require_admin, require_password_change_if_needed
 from utils.constants import ADMIN_NATIONAL_IDS
 
 from utils.constants import (
@@ -51,6 +54,10 @@ from utils.time_utils import (
     utc_to_iran
 )
 
+from utils.ui import load_main_css
+
+load_main_css()
+
 
 # ==========================
 # Auth
@@ -58,6 +65,7 @@ from utils.time_utils import (
 
 require_login()
 require_admin()
+require_password_change_if_needed()
 
 
 # ==========================
@@ -82,7 +90,7 @@ settings = get_system_settings(db)
 # Team Options
 # ==========================
 
-team_options = list(TEAMS_FLAGS.keys())
+team_options = get_team_names()
 
 # ==========================
 # Champion Prediction Lock
@@ -276,27 +284,29 @@ else:
 
         action_col1, action_col2 = st.columns(2)
 
-        home_flag = TEAMS_FLAGS.get(
-            match.home_team,
-            ""
-        )
-
-        away_flag = TEAMS_FLAGS.get(
-            match.away_team,
-            ""
-        )
-
         with st.container(border=True):
 
-            st.markdown(
-                f"""
-                ### {home_flag} {match.home_team}
-
-                **VS**
-
-                ### {away_flag} {match.away_team}
-                """
+            match_col1, match_col2, match_col3 = st.columns(
+                [4,1,4],
+                vertical_alignment="center"
             )
+
+            with match_col1:
+                show_team_block(
+                    match.home_team,
+                    width=46
+                )
+            
+            with match_col2:
+                st.markdown(
+                    "### VS"
+                )
+
+            with match_col3:
+                show_team_block(
+                    match.away_team,
+                    width=46
+                )
 
             st.write(
                 f"🏆 {match.stage}"

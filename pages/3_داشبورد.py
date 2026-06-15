@@ -1,8 +1,11 @@
 from utils.auth_guard import (
-    require_login
+    require_login,
+    require_password_change_if_needed
 )
 
 require_login()
+
+require_password_change_if_needed()
 
 import streamlit as st
 
@@ -64,7 +67,7 @@ if st.button(
     use_container_width=True
 ):
     st.switch_page(
-        "pages/7_ پیش بینی قهرمان جام.py"
+        "pages/7_پیش بینی قهرمان جام.py"
     )
 
 if st.button(

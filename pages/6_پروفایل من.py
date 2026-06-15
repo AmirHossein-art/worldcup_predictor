@@ -1,9 +1,12 @@
 from utils.auth_guard import (
     require_login,
+    require_password_change_if_needed,
     logout
 )
 
 require_login()
+
+require_password_change_if_needed()
 
 import streamlit as st
 
