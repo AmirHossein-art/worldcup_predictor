@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.ui import load_main_css
 
 # Background image
 from utils.background import get_base64
@@ -42,6 +43,16 @@ require_password_change_if_needed()
 if st.session_state.get("national_id") not in ADMIN_NATIONAL_IDS:
     st.error("دسترسی غیرمجاز")
     st.stop()
+
+
+st.set_page_config(
+    page_title="ادمین",
+    page_icon="🔑",
+    layout="centered",
+)
+
+load_main_css()
+
 
 st.title("پنل ادمین - مدیریت کاربران")
 

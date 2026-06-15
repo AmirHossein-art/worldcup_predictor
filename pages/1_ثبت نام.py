@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.ui import load_main_css
 
 from config.departments import DEPARTMENTS
 
@@ -8,6 +9,16 @@ from services.auth_service import (
     register_user
 )
 from utils.validators import normalize_digits
+
+from utils.ui import load_main_css
+
+st.set_page_config(
+    page_title="ثبت نام",
+    page_icon="🛴",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title("ثبت نام")
 
@@ -48,6 +59,8 @@ with st.form("register_form"):
         "ثبت نام",
         use_container_width=True
     )
+
+
 
 if submit:
 

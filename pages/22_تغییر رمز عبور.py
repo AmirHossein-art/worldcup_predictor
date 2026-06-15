@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.ui import load_main_css
 
 from database.connection import SessionLocal
 
@@ -46,6 +47,14 @@ if not user.must_change_password:
     st.switch_page(
         "pages/7_پیش بینی قهرمان جام.py"
     )
+
+st.set_page_config(
+    page_title="تغییر رمز",
+    page_icon="🔐",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title("🔐 تغییر رمز عبور")
 

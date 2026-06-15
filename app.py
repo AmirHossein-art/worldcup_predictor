@@ -1,14 +1,6 @@
 import streamlit as st
+from utils.ui import load_main_css
 from utils.background import get_base64
-from pathlib import Path
-
-css_path = Path("assets/style.css")
-
-with open(css_path, encoding="utf-8") as f:
-    st.markdown(
-        f"<style>{f.read()}</style>",
-        unsafe_allow_html=True
-    )
 
 img = get_base64("assets/background.png")
 
@@ -47,14 +39,14 @@ from utils.constants import (
 from utils.ui import load_main_css
 
 st.set_page_config(
-    page_title="World Cup Predictor",
+    page_title="پیش‌بینی جام جهانی",
     page_icon="⚽",
     layout="centered",
 )
 
 load_main_css()
 
-st.title("🏆 مسابقه پیش‌بینی جام جهانی 2026")
+st.title("🏆 مسابقه پیش‌بینی جام جهانی ۲۰۲۶")
 
 st.write(
     "از منوی سمت چپ وارد شوید یا ثبت نام کنید."

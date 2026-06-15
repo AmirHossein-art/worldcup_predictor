@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+from utils.ui import load_main_css
+
 from database.connection import SessionLocal
 from database.models import User
 
@@ -26,6 +28,14 @@ require_password_change_if_needed()
 # ==========================
 # Page
 # ==========================
+
+st.set_page_config(
+    page_title="رتبه‌بندی",
+    page_icon="🧮",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title("🏆 رتبه‌بندی کاربران")
 

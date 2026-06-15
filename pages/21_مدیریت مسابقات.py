@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import streamlit as st
+from utils.ui import load_main_css
 
 # Background image
 from utils.background import get_base64
@@ -55,6 +56,12 @@ from utils.time_utils import (
 )
 
 from utils.ui import load_main_css
+
+st.set_page_config(
+    page_title="مدیریت مسابقات",
+    page_icon="🔑",
+    layout="centered",
+)
 
 load_main_css()
 

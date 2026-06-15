@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.ui import load_main_css
 
 # Background image
 from utils.background import get_base64
@@ -48,11 +49,19 @@ from utils.time_utils import (
     utc_to_iran
 )
 
+st.set_page_config(
+    page_title="پیش‌بینی مسابقات",
+    page_icon="🕶",
+    layout="centered",
+)
+
 require_login()
 
 require_password_change_if_needed()
 
 db = SessionLocal()
+
+load_main_css()
 
 st.title("⚽ پیش‌بینی مسابقات")
 

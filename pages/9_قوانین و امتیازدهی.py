@@ -1,5 +1,8 @@
 import streamlit as st
 
+from pathlib import Path
+from utils.ui import load_main_css
+
 # Background image
 from utils.background import get_base64
 
@@ -41,6 +44,14 @@ from utils.auth_guard import require_login, require_password_change_if_needed
 require_login()
 
 require_password_change_if_needed()
+
+st.set_page_config(
+    page_title="قوانین",
+    page_icon="📖",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title("📖 قوانین و سیستم امتیازدهی")
 

@@ -9,6 +9,7 @@ require_login()
 require_password_change_if_needed()
 
 import streamlit as st
+from utils.ui import load_main_css
 
 from utils.constants import (
     SESSION_FIRST_NAME,
@@ -16,6 +17,14 @@ from utils.constants import (
     SESSION_DEPARTMENT,
     SESSION_IS_VERIFIED
 )
+
+st.set_page_config(
+    page_title="پروفایل من",
+    page_icon="👤",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title(
     "👤 پروفایل من"

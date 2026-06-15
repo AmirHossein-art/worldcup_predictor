@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.ui import load_main_css
 
 from database.connection import SessionLocal
 
@@ -17,6 +18,14 @@ from utils.constants import (
     SESSION_MUST_CHANGE_PASSWORD
 )
 from utils.validators import normalize_digits
+
+st.set_page_config(
+    page_title="ورود",
+    page_icon="🔑",
+    layout="centered",
+)
+
+load_main_css()
 
 st.title("ورود")
 
