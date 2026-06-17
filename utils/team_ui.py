@@ -54,3 +54,20 @@ def show_team_inline(team_name, width=28):
 
     with col_name:
         st.write(team_name)
+
+def show_team_compact(team_name, width=24):
+    col_flag, col_name = st.columns(
+        [1, 7],
+        vertical_alignment="center"
+    )
+
+    with col_flag:
+        show_team_flag(
+            team_name,
+            width=width
+        )
+
+    with col_name:
+        st.markdown(
+            f"**{team_name}**"
+        )

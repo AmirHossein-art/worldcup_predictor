@@ -6,7 +6,7 @@ from utils.constants import (
     TOURNAMENT_CHAMPION,
     CHAMPION_POINTS
 )
-
+from config.stages import is_knockout_match
 
 def get_match_result(
     home_score: int,
@@ -79,10 +79,16 @@ def calculate_prediction_score(
     # Qualified Team
     # ==========================
 
-    if match.qualified_team is not None:
+    if (
+        is_knockout_match(match)
+        and 
+        match.qualified_team is not None
+    ):
 
         if (
             actual_result == "DRAW"
+            and
+            predicted_result == "DRAW"
             and
             prediction.pred_qualified_team is not None
             and

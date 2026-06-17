@@ -54,3 +54,15 @@
 [data-testid="stTable"] * :not(svg):not(path) {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
 }
+
+/* تب‌ها */
+[data-testid="stTabs"],
+[data-testid="stTabs"] *:not(svg):not(path) {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+/* فقط متن‌های markdown داخل سایدبار، نه دکمه‌ها و آیکون‌ها */
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}

@@ -16,3 +16,16 @@ STAGES = (
     GROUP_STAGES +
     KNOCKOUT_STAGES
 )
+
+def is_group_stage(stage):
+    return stage in GROUP_STAGES
+
+
+def is_knockout_stage(stage):
+    return stage in KNOCKOUT_STAGES
+
+
+def is_knockout_match(match):
+    return is_knockout_stage(
+        match.stage
+    )
