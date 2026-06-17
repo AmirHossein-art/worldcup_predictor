@@ -15,7 +15,7 @@ from utils.ui import load_main_css
 st.set_page_config(
     page_title="ثبت نام",
     page_icon="🛴",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

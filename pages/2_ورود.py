@@ -22,7 +22,7 @@ from utils.validators import normalize_digits
 st.set_page_config(
     page_title="ورود",
     page_icon="🔑",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

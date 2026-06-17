@@ -51,7 +51,7 @@ if not user.must_change_password:
 st.set_page_config(
     page_title="تغییر رمز",
     page_icon="🔐",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

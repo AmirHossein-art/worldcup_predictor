@@ -21,7 +21,7 @@ from utils.constants import (
 st.set_page_config(
     page_title="پروفایل من",
     page_icon="👤",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

@@ -48,7 +48,7 @@ if st.session_state.get("national_id") not in ADMIN_NATIONAL_IDS:
 st.set_page_config(
     page_title="ادمین",
     page_icon="🔑",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

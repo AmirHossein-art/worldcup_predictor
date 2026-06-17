@@ -153,7 +153,7 @@ predictions = (
         ]
     )
     .order_by(
-        Match.kickoff_time.asc(),
+        Match.kickoff_time.desc(),
         Match.match_id.asc()
     )
     .all()

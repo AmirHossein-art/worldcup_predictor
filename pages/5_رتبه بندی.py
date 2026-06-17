@@ -32,7 +32,7 @@ require_password_change_if_needed()
 st.set_page_config(
     page_title="رتبه‌بندی",
     page_icon="🧮",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

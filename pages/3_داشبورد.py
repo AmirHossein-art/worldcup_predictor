@@ -19,7 +19,7 @@ from utils.constants import (
 st.set_page_config(
     page_title="داشبورد",
     page_icon="📊",
-    layout="centered",
+    layout="wide",
 )
 
 load_main_css()

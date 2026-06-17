@@ -52,7 +52,7 @@ from utils.time_utils import (
 st.set_page_config(
     page_title="پیش‌بینی مسابقات",
     page_icon="🕶",
-    layout="centered",
+    layout="wide",
 )
 
 require_login()

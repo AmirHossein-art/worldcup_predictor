@@ -61,7 +61,7 @@ from utils.constants import (
 st.set_page_config(
     page_title="قهرمان جام",
     page_icon="🏆",
-    layout="centered",
+    layout="wide",
 )
 
 require_login()
