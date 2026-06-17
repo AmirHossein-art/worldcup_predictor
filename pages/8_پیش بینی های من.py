@@ -30,7 +30,7 @@ st.markdown(
 )
 
 from database.connection import SessionLocal
-from database.models import Prediction, TournamentPrediction
+from database.models import Match, Prediction, TournamentPrediction
 
 from utils.teams import (
     get_flag_path
@@ -144,12 +144,17 @@ st.subheader("⚽ پیش‌بینی‌های بازی‌ها")
 
 predictions = (
     db.query(Prediction)
+    .join(Match)
     .filter(
         Prediction.user_id
         ==
         st.session_state[
             SESSION_USER_ID
         ]
+    )
+    .order_by(
+        Match.kickoff_time.asc(),
+        Match.match_id.asc()
     )
     .all()
 )
