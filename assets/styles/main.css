@@ -1,68 +1,169 @@
+/* =========================
+   Safe Persian Font
+   ========================= */
 
-/* پایه اصلی برنامه */
 .stApp {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
 }
 
-/* متن های markdown */
-.stMarkdown,
-.stMarkdown *{
-    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
-}
+/* Markdown texts only */
 [data-testid="stMarkdownContainer"],
-[data-testid="stMarkdownContainer"] * {
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] h1,
+[data-testid="stMarkdownContainer"] h2,
+[data-testid="stMarkdownContainer"] h3,
+[data-testid="stMarkdownContainer"] h4,
+[data-testid="stMarkdownContainer"] h5,
+[data-testid="stMarkdownContainer"] h6,
+[data-testid="stMarkdownContainer"] li {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
 }
 
-/* عنوان‌ها و متن‌های عمومی */
-.stApp h1,
-.stApp h2,
-.stApp h3,
-.stApp h4,
-.stApp h5,
-.stApp h6,
-.stApp p,
-.stApp label {
+/* Alerts: info, success, warning, error */
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"] * {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
 }
 
+/* Widget labels */
+[data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] *:not(svg):not(path) {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
+}
 
-/* ورودی ها */
+/* Inputs */
 .stApp input,
-.stApp textarea,
-.stApp button,
-.stApp label{
+.stApp textarea {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Number inputs: keep numbers readable */
+input[type="number"] {
+    direction: ltr;
+    text-align: center;
+}
+
+/* Selectbox text, but not icons */
+[data-baseweb="select"] span,
+[data-baseweb="select"] input,
+[data-baseweb="select"] div:not([role="button"]) {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
 }
 
-/* selectbox, number_input کامپوننت‌های , BaseWeb */
-[data-baseweb],
-[data-baseweb] * :not(svg):not(path) {
-    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
-}
-
-/* metrics */
+/* Metrics */
 [data-testid="stMetric"],
-[data-testid="stMetric"] * {
+[data-testid="stMetric"] *:not(svg):not(path) {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Dataframe / table text */
+[data-testid="stDataFrame"] *:not(svg):not(path),
+[data-testid="stTable"] *:not(svg):not(path) {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
 }
 
-/* جدول‌ها */
-[data-testid="stDataFrame"],
-[data-testid="stDataFrame"] * :not(svg):not(path),
-[data-testid="stTable"],
-[data-testid="stTable"] * :not(svg):not(path) {
+/* Tabs text only */
+[data-testid="stTabs"] [role="tab"],
+[data-testid="stTabs"] [role="tab"] *:not(svg):not(path) {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
 }
 
-/* تب‌ها */
-[data-testid="stTabs"],
-[data-testid="stTabs"] *:not(svg):not(path) {
-    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
-}
-
-/* فقط متن‌های markdown داخل سایدبار، نه دکمه‌ها و آیکون‌ها */
+/* Sidebar: only markdown text, not buttons/icons */
 section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
 section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+
+.rtl-card {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+.rtl-card * {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+.ltr-score {
+    direction: ltr;
+    unicode-bidi: embed;
+    display: inline-block;
+}
+
+/* رنگ متن داخل پیام‌های info / warning / success / error */
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"],
+[data-testid="stAlert"] [data-testid="stMarkdownContainer"] * {
+    color: #ffffff;
+}
+
+
+.team-line {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    direction: rtl;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.team-name {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-weight: 800;
+    font-size: 1.7rem;
+    color: #ffffff;
+}   
+
+/* Chart Caption */
+.chart-caption {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    opacity: 0.92;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    line-height: 1.9;
+}
+
+/* Prediction cards adjustments */
+.prediction-team-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    direction: rtl;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.prediction-team-name {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #ffffff;
+}
+
+.vs-text {
+    direction: ltr;
+    text-align: center;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-weight: 900;
+    font-size: 1rem;
+    color: #ffffff;
+    opacity: 0.9;
 }

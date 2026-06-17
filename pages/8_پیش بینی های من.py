@@ -38,7 +38,7 @@ from utils.teams import (
 
 from utils.team_ui import(
     show_team_flag,
-    show_team_compact
+    show_prediction_team_html
 )
 
 from utils.auth_guard import require_login, require_password_change_if_needed
@@ -200,25 +200,29 @@ else:
             )
 
             with match_col1:
-
-                show_team_compact(
+                show_prediction_team_html(
                     match.home_team,
-                    width=24
+                    flag_width=34,
+                    justify="center"
                 )
 
             with match_col2:
-
                 st.markdown(
-                    "**VS**"
+                    """
+                    <div class="vs-text">
+                        VS
+                    </div>
+                    """,
+                    unsafe_allow_html=True
                 )
 
             with match_col3:
-
-                show_team_compact(
+                show_prediction_team_html(
                     match.away_team,
-                    width=24
+                    flag_width=34,
+                    justify="center"
                 )
-
+                
             info_col1, info_col2, info_col3, info_col4 = st.columns(
                 [3, 3, 2, 2],
                 vertical_alignment="center"

@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import altair as alt
 
 from utils.ui import load_main_css
 
@@ -25,6 +26,7 @@ require_login()
 
 require_password_change_if_needed()
 
+
 # ==========================
 # Page
 # ==========================
@@ -45,6 +47,118 @@ st.info(
 
 """
 )
+
+
+# ==========================
+# Deputy Comparing def
+# ==========================
+
+def build_department_stats(
+    all_users_scores
+):
+    department_stats = {}
+
+    for item in all_users_scores:
+
+        user = item["user"]
+        score = item["score"]
+
+        department = (
+            user.department
+            if user.department
+            else "نامشخص"
+        )
+
+        if department not in department_stats:
+
+            department_stats[department] = {
+                "members_count": 0,
+                "scored_members_count": 0,
+                "total_score": 0,
+                "scored_total_score": 0,
+                "max_score": 0,
+            }
+
+        department_stats[
+            department
+        ]["members_count"] += 1
+
+        department_stats[
+            department
+        ]["total_score"] += score
+
+        if score > 0:
+
+            department_stats[
+                department
+            ]["scored_members_count"] += 1
+
+            department_stats[
+                department
+            ]["scored_total_score"] += score
+
+        if score > department_stats[department]["max_score"]:
+
+            department_stats[
+                department
+            ]["max_score"] = score
+
+    department_rows = []
+
+    for department, stats in department_stats.items():
+
+        members_count = stats["members_count"]
+        scored_members_count = stats["scored_members_count"]
+
+        average_all = 0
+
+        if members_count > 0:
+
+            average_all = (
+                stats["total_score"]
+                /
+                members_count
+            )
+
+        average_scored = 0
+
+        if scored_members_count > 0:
+
+            average_scored = (
+                stats["scored_total_score"]
+                /
+                scored_members_count
+            )
+
+        department_rows.append(
+            {
+                "معاونت": department,
+                "تعداد اعضا": members_count,
+                "افراد امتیازدار": scored_members_count,
+                "میانگین کل": round(
+                    average_all,
+                    2
+                ),
+                "میانگین امتیازدارها": round(
+                    average_scored,
+                    2
+                ),
+                "بیشترین امتیاز": stats["max_score"],
+                "مجموع امتیاز": stats["total_score"],
+            }
+        )
+
+    department_rows.sort(
+        key=lambda row: (
+            row["میانگین کل"],
+            row["مجموع امتیاز"],
+            row["افراد امتیازدار"],
+            row["تعداد اعضا"]
+        ),
+        reverse=True
+    )
+
+    return department_rows
 
 # ==========================
 # Database
@@ -150,8 +264,34 @@ if leaderboard_rows:
         leaderboard_rows
     )
 
+    styled_ranking_df = (
+        ranking_df
+        .style
+        .set_properties(
+            **{
+                "text-align": "center",
+                "font-family": "Vazirmatn, Tahoma, Arial, sans-serif",
+                "font-size": "16px",
+                "font-weight": "600",
+            }
+        )
+        .set_table_styles(
+            [
+                {
+                    "selector": "th",
+                    "props": [
+                        ("text-align", "center"),
+                        ("font-family", "Vazirmatn, Tahoma, Arial, sans-serif"),
+                        ("font-size", "16px"),
+                        ("font-weight", "800"),
+                    ],
+                }
+            ]
+        )
+    )
+
     st.dataframe(
-        ranking_df,
+        styled_ranking_df,
         use_container_width=True,
         hide_index=True
     )
@@ -169,94 +309,98 @@ else:
             "هنوز کاربر تایید شده‌ای وجود ندارد."
         )
 
-
-    
-
 # ==========================
-# Top 3 Users
+# Department Comparison
 # ==========================
 
-if leaderboard:
+st.subheader("🏢 مقایسه معاونت‌ها")
 
-    st.subheader(
-        "🏅 برترین کاربران"
+department_rows = build_department_stats(
+    all_users_scores
+)
+
+if department_rows:
+
+    department_df = pd.DataFrame(
+        department_rows
     )
 
-    top_users = [
-        item
-        for item in leaderboard
-        if item["rank"] <= 3
+    st.dataframe(
+        department_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+    st.markdown(
+        """
+        <div class="chart-caption">
+            میانگین کل بر اساس تمام اعضای تاییدشده هر معاونت محاسبه شده است؛
+            حتی افرادی که هنوز امتیاز نگرفته‌اند.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+else:
+
+    st.info(
+        "هنوز داده‌ای برای مقایسه معاونت‌ها وجود ندارد."
+    )
+
+chart_df = department_df[
+    [
+        "معاونت",
+        "میانگین کل"
     ]
+].copy()
 
-    columns = st.columns(
-        len(top_users)
+chart_height = max(
+    350,
+    len(chart_df) * 55
+)
+
+department_chart = (
+    alt.Chart(chart_df)
+    .mark_bar(
+        cornerRadiusEnd=6
     )
-
-    medals = {
-        1: "🥇 نفر اول",
-        2: "🥈 نفر دوم",
-        3: "🥉 نفر سوم"
-    }
-
-    for index, item in enumerate(
-        top_users
-    ):
-
-        user = item["user"]
-
-        with columns[index]:
-
-            st.metric(
-                medals.get(
-                    item["rank"],
-                    f"رتبه {item["rank"]}"
-                ),
-                (
-                    f"{user.first_name}"
-                    f"{user.last_name}"
-                ),
-                item["score"]
+    .encode(
+        x=alt.X(
+            "میانگین کل:Q",
+            title="میانگین امتیاز"
+        ),
+        y=alt.Y(
+            "معاونت:N",
+            sort="-x",
+            title=None,
+            axis=alt.Axis(
+                labelLimit=500,
+                labelFontSize=14,
+                labelPadding=10
             )
-
-    # ==========================
-    # Chart
-    # ==========================
-
-    chart_rows = []
-
-    for item in top_users:
-
-        user = item["user"]
-
-        chart_rows.append(
-            {
-                "نام": (
-                    f"{user.first_name} "
-                    f"{user.last_name}"
-                ),
-                "امتیاز": item["score"]
-            }
-        )
-
-    chart_df = (
-        pd.DataFrame(
-            chart_rows
-        )
-        .set_index("نام")
+        ),
+        tooltip=[
+            alt.Tooltip(
+                "معاونت:N",
+                title="معاونت"
+            ),
+            alt.Tooltip(
+                "میانگین کل:Q",
+                title="میانگین کل",
+                format=".2f"
+            )
+        ]
     )
-
-    st.subheader(
-        "📈 مقایسه امتیاز نفرات برتر"
+    .properties(
+        height=chart_height
     )
+)
 
-    fig = px.bar(
-        chart_df.reset_index(),
-        x="امتیاز",
-        y="نام",
-        orientation="h",
-        labels={"امتیاز": "امتیاز", "نام": "نام"}
-    )
-    st.plotly_chart(fig, use_container_width=True)
+st.altair_chart(
+    department_chart,
+    use_container_width=True
+)
+    
 
 # ==========================
 # Close DB

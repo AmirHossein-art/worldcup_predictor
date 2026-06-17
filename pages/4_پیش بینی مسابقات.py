@@ -36,7 +36,7 @@ from utils.date_utils import can_predict
 from database.connection import SessionLocal
 from database.models import Match, Prediction
 
-from utils.team_ui import show_team_block
+from utils.team_ui import show_team_html
 
 from utils.auth_guard import require_login, require_password_change_if_needed
 from utils.constants import SESSION_USER_ID
@@ -124,9 +124,10 @@ for match in matches:
         )
 
         with match_col1:
-            show_team_block(
+            show_team_html(
                 match.home_team,
-                width=46
+                flag_width=58,
+                justify="center"
             )
 
         with match_col2:
@@ -135,9 +136,10 @@ for match in matches:
             )
 
         with match_col3:
-            show_team_block(
+            show_team_html(
                 match.away_team,
-                width=46
+                flag_width=58,
+                justify="center"
             )
 
         st.write(
