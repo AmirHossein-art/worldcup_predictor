@@ -18,6 +18,8 @@ from utils.user_helpers import (
     get_user_champion_display
 )
 
+from services.snapshot_service import get_daily_phenomenon
+
 # ==========================
 # Auth
 # ==========================
@@ -133,12 +135,7 @@ def build_department_stats(
         department_rows.append(
             {
                 "معاونت": department,
-                "تعداد اعضا": members_count,
                 "افراد امتیازدار": scored_members_count,
-                "میانگین کل": round(
-                    average_all,
-                    2
-                ),
                 "میانگین امتیازدارها": round(
                     average_scored,
                     2
@@ -150,10 +147,7 @@ def build_department_stats(
 
     department_rows.sort(
         key=lambda row: (
-            row["میانگین کل"],
             row["مجموع امتیاز"],
-            row["افراد امتیازدار"],
-            row["تعداد اعضا"]
         ),
         reverse=True
     )
@@ -252,6 +246,7 @@ for item in leaderboard:
         }
     )
 
+
 # ==========================
 # Full Ranking Table
 # ==========================
@@ -309,11 +304,85 @@ else:
             "هنوز کاربر تایید شده‌ای وجود ندارد."
         )
 
+
+# ==========================
+# Daily Phenomenons
+# ==========================
+
+daily_phenomenons = get_daily_phenomenon(
+    db
+)
+
+if daily_phenomenons:
+
+
+    st.subheader("🌟 پدیده‌های روز")
+
+    top_daily_phenomenons = daily_phenomenons[:3]
+
+    medals = [
+        "🥇",
+        "🥈",
+        "🥉"
+    ]
+
+    medal_titles = [
+        "پدیده اول روز",
+        "پدیده دوم روز",
+        "پدیده سوم روز"
+    ]
+
+    columns = st.columns(
+        len(top_daily_phenomenons)
+    )
+
+    for index, item in enumerate(
+        top_daily_phenomenons
+    ):
+
+        user = item["user"]
+
+        full_name = (
+            f"{user.first_name} "
+            f"{user.last_name}"
+        )
+
+        with columns[index]:
+
+            st.metric(
+                label=(
+                    f"{medals[index]} "
+                    f"{medal_titles[index]}"
+                ),
+                value=full_name,
+                delta=(
+                    f"+{item['score_delta']} امتیاز"
+                )
+            )
+
+            st.markdown(
+                f"""
+                <div class="daily-phenomenon-caption">
+                    امتیاز فعلی: {item["current_score"]}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+
+else:
+
+    st.info(
+        "امروز هنوز افزایش امتیاز قابل توجهی ثبت نشده است."
+    )
+
+
+
 # ==========================
 # Department Comparison
 # ==========================
 
-st.subheader("🏢 مقایسه معاونت‌ها")
+st.subheader("🏢 رتبه‌بندی بخش‌ها")
 
 department_rows = build_department_stats(
     all_users_scores
@@ -325,6 +394,10 @@ if department_rows:
         department_rows
     )
 
+    department_df = department_df[
+            department_df["افراد امتیازدار"] > 0
+    ]
+
     st.dataframe(
         department_df,
         use_container_width=True,
@@ -334,8 +407,7 @@ if department_rows:
     st.markdown(
         """
         <div class="chart-caption">
-            میانگین کل بر اساس تمام اعضای تاییدشده هر معاونت محاسبه شده است؛
-            حتی افرادی که هنوز امتیاز نگرفته‌اند.
+            رتبه‌بندی بخش‌ها براساس میانگین افراد امتیازدار
         </div>
         """,
         unsafe_allow_html=True
@@ -350,7 +422,7 @@ else:
 chart_df = department_df[
     [
         "معاونت",
-        "میانگین کل"
+        "میانگین امتیازدارها"
     ]
 ].copy()
 
@@ -366,7 +438,7 @@ department_chart = (
     )
     .encode(
         x=alt.X(
-            "میانگین کل:Q",
+            "میانگین امتیازدارها:Q",
             title="میانگین امتیاز"
         ),
         y=alt.Y(
@@ -385,8 +457,8 @@ department_chart = (
                 title="معاونت"
             ),
             alt.Tooltip(
-                "میانگین کل:Q",
-                title="میانگین کل",
+                "میانگین امتیازدارها:Q",
+                title="میانگین امتیازدارها",
                 format=".2f"
             )
         ]

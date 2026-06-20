@@ -7,11 +7,13 @@ from sqlalchemy import (
     Integer,
     String,
     ForeignKey,
-    UniqueConstraint
+    UniqueConstraint,
+    Date
 )
 from sqlalchemy.orm import relationship
 
 from database.connection import Base
+
 
 class User(Base):
 
@@ -294,4 +296,22 @@ class SystemSettings(Base):
     champion_deadline = Column(
         DateTime,
         nullable=True
+    )
+
+class UserScoreSnapshot(Base):
+    __tablename__ = "user_score_snapshots"
+
+    snapshot_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    snapshot_date = Column(Date, nullable=False)
+    score = Column(Integer, nullable=False, default=0)
+
+    user = relationship("User")
+
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "snapshot_date",
+            name="uq_user_score_snapshot_date"
+        ),
     )

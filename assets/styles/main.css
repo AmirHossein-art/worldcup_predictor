@@ -167,3 +167,14 @@ section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     color: #ffffff;
     opacity: 0.9;
 }
+
+.daily-phenomenon-caption {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    opacity: 0.9;
+    margin-top: 6px;
+}

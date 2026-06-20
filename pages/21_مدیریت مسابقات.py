@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import streamlit as st
 from utils.ui import load_main_css
 
+from services.snapshot_service import save_daily_score_snapshots
+
 # Background image
 from utils.background import get_base64
 
@@ -98,6 +100,33 @@ settings = get_system_settings(db)
 # ==========================
 
 team_options = get_team_names()
+
+
+# ==========================
+# Daily Phenomenon helper def 
+# ==========================
+
+def update_today_score_snapshots_after_result_change(db):
+    try:
+        db.expire_all()
+
+        save_daily_score_snapshots(
+            db
+        )
+
+        return True
+
+    except Exception as error:
+        db.rollback()
+
+        st.warning(
+            (
+                "نتیجه مسابقه ثبت شد، اما به‌روزرسانی "
+                f"snapshot امتیازهای امروز انجام نشد: {error}"
+            )
+        )
+
+        return False
 
 # ==========================
 # Champion Prediction Lock
@@ -439,10 +468,21 @@ else:
 
                 db.commit()
 
-                st.success(
-                    "نتیجه ذخیره شد"
+                snapshot_updated = update_today_score_snapshots_after_result_change(
+                    db
                 )
 
+                if snapshot_updated:
+                    st.success(
+                        "نتیجه مسابقه ثبت شد و امتیازهای امروز هم به‌روزرسانی شدند."
+                    )
+                else:
+
+                    st.success(
+                        "نتیجه مسابقات ثبت شد"
+                    )
+
                 st.rerun()
+
 
 db.close()

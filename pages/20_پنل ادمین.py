@@ -1,6 +1,8 @@
 import streamlit as st
 from utils.ui import load_main_css
 
+from services.snapshot_service import save_daily_score_snapshots
+
 # Background image
 from utils.background import get_base64
 
@@ -158,5 +160,6 @@ for user in users:
 
             st.success("کاربر تایید شد")
             st.rerun()
+
 
 db.close()
