@@ -57,7 +57,7 @@ with st.expander("⚽ امتیازات مسابقات"):
     - **نتیجه دقیق:** {EXACT_SCORE_POINTS} امتیاز
     - **نتیجه صحیح + تفاضل گل صحیح:** {WINNER_DIFF_POINTS} امتیاز
     - **نتیجه صحیح (فقط):** {WINNER_ONLY_POINTS} امتیاز
-    - **تیم صعودکننده:** {QUALIFIED_TEAM_POINTS} امتیاز (فقط در برابری و حذفی)
+    - **تیم صعودکننده:** {QUALIFIED_TEAM_POINTS} امتیاز (فقط در حذفی)
     """)
 
 with st.expander("🏆 امتیازات قهرمانی"):

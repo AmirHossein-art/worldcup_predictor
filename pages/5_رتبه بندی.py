@@ -8,7 +8,7 @@ from utils.ui import load_main_css
 from database.connection import SessionLocal
 from database.models import User
 
-from utils.auth_guard import require_login, require_password_change_if_needed
+from utils.auth_guard import require_password_change_if_needed
 
 from services.scoring_service import (
     calculate_user_score
@@ -24,7 +24,7 @@ from services.snapshot_service import get_daily_phenomenon
 # Auth
 # ==========================
 
-require_login()
+
 
 require_password_change_if_needed()
 

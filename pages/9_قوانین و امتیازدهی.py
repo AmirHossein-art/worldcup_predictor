@@ -39,9 +39,8 @@ from utils.constants import (
     CHAMPION_POINTS,
 )
 
-from utils.auth_guard import require_login, require_password_change_if_needed
+from utils.auth_guard import require_password_change_if_needed
 
-require_login()
 
 require_password_change_if_needed()
 
