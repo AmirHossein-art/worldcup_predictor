@@ -1,5 +1,6 @@
 import streamlit as st
 from utils.ui import load_main_css
+from config.stages import KNOCKOUT_STAGES
 
 # Background image
 from utils.background import get_base64
@@ -231,60 +232,70 @@ else:
             with info_col1:
 
                 st.markdown(
-                    f"**پیش‌بینی من:** {user_prediction}"
+                    (
+                        '<div class="my-prediction-main-text">'
+                        f'پیش‌بینی من: {user_prediction}'
+                        '</div>'
+                    ),
+                    unsafe_allow_html=True
                 )
 
             with info_col2:
 
                 st.markdown(
-                    f"**نتیجه بازی:** {actual_result}"
+                    (
+                        '<div class="my-prediction-main-text">'
+                        f'نتیجه بازی: {actual_result}'
+                        '</div>'
+                    ),
+                    unsafe_allow_html=True
                 )
 
-            with info_col3:
+            if match.result_entered:
 
-                if match.result_entered:
+                score_chip_html = (
+                    '<span class="prediction-status-badge prediction-status-score">'
+                    f'✅ امتیاز: {prediction_points}'
+                    '</span>'
+                )
 
-                    st.markdown(
-                        f"""
-                        <div style="
-                            display: inline-block;
-                            padding: 4px 10px;
-                            border-radius: 10px;
-                            background: rgba(40, 167, 69, 0.18);
-                            border: 1px solid rgba(40, 167, 69, 0.45);
-                            font-weight: 700;
-                            font-size: 0.9rem;
-                            white-space: nowrap;
-                        ">
-                            امتیاز: {prediction_points}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
+            else:
 
-                else:
+                score_chip_html = (
+                    '<span class="prediction-status-badge prediction-status-pending">'
+                    f'⏳ {prediction_points}'
+                    '</span>'
+                )
 
-                    st.markdown(
-                        f"""
-                        <div style="
-                            display: inline-block;
-                            padding: 4px 10px;
-                            border-radius: 10px;
-                            background: rgba(255, 193, 7, 0.18);
-                            border: 1px solid rgba(255, 193, 7, 0.45);
-                            font-weight: 700;
-                            font-size: 0.9rem;
-                            white-space: nowrap;
-                        ">
-                            {prediction_points}
-                        </div>
-                        """,
-                        unsafe_allow_html=True
-                    )
+            stage_chip_html = (
+                '<span class="my-prediction-chip my-prediction-chip-stage">'
+                f'🏆 مرحله: {match.stage}'
+                '</span>'
+            )
 
-            with info_col4:
+            st.markdown(
+                (
+                    '<div class="my-prediction-info-row">'
+                    f'{stage_chip_html}'
+                    f'{score_chip_html}'
+                    '</div>'
+                ),
+                unsafe_allow_html=True
+            )
 
-                st.caption(
-                    f"مرحله: {match.stage}"
+            if (
+                match.stage in KNOCKOUT_STAGES
+                and
+                prediction.pred_qualified_team is not None
+            ):
+
+                st.markdown(
+                    (
+                        '<div class="my-qualified-team-box">'
+                        '🏆 تیم صعودکننده منتخب من: '
+                        f'<strong>{prediction.pred_qualified_team}</strong>'
+                        '</div>'
+                    ),
+                    unsafe_allow_html=True
                 )
 db.close()

@@ -219,6 +219,15 @@ for match in matches:
                         horizontal=True,
                         key=f"qualified_{match.match_id}"
                     )
+                    st.markdown(
+                        f"""
+                        <div class="qualified-team-caption">
+                            🏆 تیم صعودکننده منتخب شما:
+                            <strong>{selected_qualified_team}</strong>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
                 elif match.stage in KNOCKOUT_STAGES:
 
@@ -302,6 +311,15 @@ for match in matches:
                         ],
                         horizontal=True,
                         key=f"qualified_{match.match_id}"
+                    )
+                    st.markdown(
+                        f"""
+                        <div class="qualified-team-caption">
+                            🏆 تیم صعودکننده منتخب شما:
+                            <strong>{selected_qualified_team}</strong>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 if st.button(

@@ -263,15 +263,146 @@ section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     font-size: 1.15rem;
     font-weight: 800;
     color: #ffffff;
-    margin-top: 16px;
+    margin-top: 14px;
     margin-bottom: 18px;
     line-height: 2;
-    opacity: 0.95;
+    opacity: 0.96;
 }
 
 .qualified-team-caption strong {
     font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
-    font-size: 1.2rem;
+    font-size: 1.22rem;
     font-weight: 900;
     color: #ffffff;
+}
+
+.my-prediction-meta-row {
+    direction: rtl;
+    text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+}
+
+.prediction-chip {
+    direction: rtl;
+    text-align: right;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 12px;
+    border-radius: 999px;
+
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1.7;
+
+    color: #ffffff;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+.prediction-chip-stage {
+    background: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.45);
+}
+
+.prediction-chip-result {
+    background: rgba(234, 179, 8, 0.18);
+    border-color: rgba(234, 179, 8, 0.45);
+}
+
+.prediction-chip-score {
+    background: rgba(34, 197, 94, 0.18);
+    border-color: rgba(34, 197, 94, 0.45);
+}
+
+.my-qualified-team-box {
+    direction: rtl;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+
+    background: rgba(255, 193, 7, 0.16);
+    border: 1px solid rgba(255, 193, 7, 0.45);
+    border-radius: 12px;
+
+    padding: 9px 14px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    line-height: 1.9;
+}
+
+.my-qualified-team-box strong {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.my-prediction-text {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 2;
+}
+
+.my-prediction-score-line {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 2;
+}
+
+.prediction-status-badge {
+    direction: rtl;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-width: 120px;
+    padding: 7px 14px;
+    border-radius: 12px;
+
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 0.98rem;
+    font-weight: 900;
+    line-height: 1.7;
+    white-space: nowrap;
+
+    color: #ffffff;
+}
+
+.prediction-status-score {
+    background: rgba(40, 167, 69, 0.22);
+    border: 1px solid rgba(40, 167, 69, 0.65);
+    box-shadow: 0 0 0 1px rgba(40, 167, 69, 0.12);
+}
+
+.prediction-status-pending {
+    background: rgba(255, 193, 7, 0.20);
+    border: 1px solid rgba(255, 193, 7, 0.70);
+    box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.12);
 }
