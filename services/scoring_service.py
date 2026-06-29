@@ -77,37 +77,40 @@ def calculate_prediction_score(
 
     # ==========================
     # Qualified Team
+    # فقط برای بازی‌های حذفی
     # ==========================
 
     if (
         is_knockout_match(match)
-        and 
+        and
         match.qualified_team is not None
     ):
 
-        if (
-            actual_result == "DRAW"
-            and
+        predicted_qualified_team = None
+
+        if predicted_result == "HOME":
+
+            predicted_qualified_team = match.home_team
+
+        elif predicted_result == "AWAY":
+
+            predicted_qualified_team = match.away_team
+
+        elif (
             predicted_result == "DRAW"
             and
             prediction.pred_qualified_team is not None
+        ):
+
+            predicted_qualified_team = prediction.pred_qualified_team
+
+        if (
+            predicted_qualified_team is not None
             and
-            prediction.pred_qualified_team == match.qualified_team
+            predicted_qualified_team == match.qualified_team
         ):
 
             score += QUALIFIED_TEAM_POINTS
-
-        elif (
-            actual_result != "DRAW"
-            and
-            predicted_result == actual_result
-            and
-            prediction.pred_qualified_team == match.qualified_team
-        ):
-
-            score += QUALIFIED_TEAM_POINTS
-
-    return score
 
 
 def calculate_user_score(
