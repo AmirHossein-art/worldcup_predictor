@@ -255,3 +255,23 @@ section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     border-top: 1px solid rgba(255, 255, 255, 0.22);
     margin: 22px 0;
 }
+
+.qualified-team-caption {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 16px;
+    margin-bottom: 18px;
+    line-height: 2;
+    opacity: 0.95;
+}
+
+.qualified-team-caption strong {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #ffffff;
+}

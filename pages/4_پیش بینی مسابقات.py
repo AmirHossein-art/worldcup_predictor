@@ -228,8 +228,14 @@ for match in matches:
                         away_pred
                     )
 
-                    st.caption(
-                        f"تیم صعودکننده براساس پیش‌بینی شما: {automatic_qualified_team}"
+                    st.markdown(
+                        f"""
+                        <div class="qualified-team-caption">
+                            🏆 تیم صعودکننده براساس پیش‌بینی شما:
+                            <strong>{automatic_qualified_team}</strong>
+                        </div>
+                        """,
+                        unsafe_allow_html=True
                     )
 
                 if st.button(
