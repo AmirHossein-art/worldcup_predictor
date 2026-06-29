@@ -112,6 +112,8 @@ def calculate_prediction_score(
 
             score += QUALIFIED_TEAM_POINTS
 
+    return score
+
 
 def calculate_user_score(
     user

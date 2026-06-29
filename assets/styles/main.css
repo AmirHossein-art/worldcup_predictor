@@ -178,3 +178,80 @@ section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] * {
     opacity: 0.9;
     margin-top: 6px;
 }
+
+.rules-box {
+    direction: rtl;
+    text-align: right;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 2.2;
+    color: #ffffff;
+
+    background: rgba(12, 18, 30, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    border-radius: 14px;
+
+    padding: 24px 30px;
+    margin-top: 16px;
+    margin-bottom: 18px;
+}
+
+.rules-box * {
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.rules-box h4 {
+    direction: rtl;
+    text-align: right;
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin-top: 0;
+    margin-bottom: 22px;
+    color: #ffffff;
+}
+
+.rules-box p {
+    direction: rtl;
+    text-align: right;
+    margin: 10px 0;
+    color: #ffffff;
+}
+
+.rules-box strong {
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.rule-section-title {
+    direction: rtl;
+    text-align: right;
+    display: block;
+    font-size: 1.12rem;
+    font-weight: 900;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.score-line {
+    direction: rtl;
+    text-align: right;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.ltr-part {
+    direction: ltr;
+    unicode-bidi: embed;
+    display: inline-block;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.rules-box hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    margin: 22px 0;
+}

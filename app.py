@@ -60,10 +60,10 @@ with st.expander("⚽ امتیازات مسابقات"):
     - **تیم صعودکننده:** {QUALIFIED_TEAM_POINTS} امتیاز (فقط در حذفی)
     """)
 
-with st.expander("🏆 امتیازات قهرمانی"):
-    st.markdown(f"""
-    - **پیش‌بینی قهرمان درست:** {CHAMPION_POINTS} امتیاز
-    """)
+#with st.expander("🏆 امتیازات قهرمانی"):
+#    st.markdown(f"""
+#    - **پیش‌بینی قهرمان درست:** {CHAMPION_POINTS} امتیاز
+#    """)
 
 st.info(
     """

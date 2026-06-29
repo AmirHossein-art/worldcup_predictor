@@ -43,6 +43,23 @@ from utils.constants import SESSION_USER_ID
 
 from config.stages import KNOCKOUT_STAGES
 
+def get_predicted_qualified_team(
+    match,
+    home_pred,
+    away_pred,
+    selected_qualified_team=None
+):
+    if match.stage not in KNOCKOUT_STAGES:
+        return None
+
+    if home_pred > away_pred:
+        return match.home_team
+
+    if away_pred > home_pred:
+        return match.away_team
+
+    return selected_qualified_team
+
 from utils.time_utils import (
     format_shamsi_datetime,
     iran_to_utc,
@@ -67,13 +84,14 @@ st.title("⚽ پیش‌بینی مسابقات")
 
 st.info(
     """
-⚠️ ثبت پیش‌بینی تا قبل از شروع بازی امکان پذیر است.
+⚠️ ثبت پیش‌بینی تا قبل از شروع بازی امکان‌پذیر است.
 
-⚠️ امتیازدهی مسابقات فقط بر اساس نتیجه پایان ۹۰ دقیقه قانونی انجام می‌شود.
+⚠️ امتیاز نتیجه مسابقه بر اساس نتیجه پایان ۹۰ دقیقه قانونی محاسبه می‌شود.
 
-👉 **برای توضیحات کامل تر درباره سیستم امتیازدهی و قوانین مهم، 
-    به صفحه «قوانین و امتیازدهی» مراجعه کنید.**
+🏆 در مسابقات حذفی، اگر پیش‌بینی شما مساوی باشد، باید تیم صعودکننده را نیز انتخاب کنید.
 
+👉 **برای توضیحات کامل‌تر درباره سیستم امتیازدهی و قوانین مهم، 
+به صفحه «قوانین و امتیازدهی» مراجعه کنید.**
 """
 )
 
@@ -178,21 +196,21 @@ for match in matches:
                     key=f"away_{match.match_id}"
                 )
 
-                pred_qualified_team = None
+                selected_qualified_team = None
 
-                if match.stage in KNOCKOUT_STAGES:
+                if (
+                    match.stage in KNOCKOUT_STAGES
+                    and
+                    home_pred == away_pred
+                ):
 
                     selected_index = 0
 
-                    if (
-                        existing.pred_qualified_team
-                        ==
-                        match.away_team
-                    ):
+                    if existing.pred_qualified_team == match.away_team:
                         selected_index = 1
 
-                    pred_qualified_team = st.radio(
-                        "🏆 تیم صعود کننده",
+                    selected_qualified_team = st.radio(
+                        "🏆 تیم صعودکننده در صورت مساوی",
                         [
                             match.home_team,
                             match.away_team
@@ -200,6 +218,18 @@ for match in matches:
                         index=selected_index,
                         horizontal=True,
                         key=f"qualified_{match.match_id}"
+                    )
+
+                elif match.stage in KNOCKOUT_STAGES:
+
+                    automatic_qualified_team = get_predicted_qualified_team(
+                        match,
+                        home_pred,
+                        away_pred
+                    )
+
+                    st.caption(
+                        f"تیم صعودکننده براساس پیش‌بینی شما: {automatic_qualified_team}"
                     )
 
                 if st.button(
@@ -210,7 +240,13 @@ for match in matches:
 
                     existing.pred_home = home_pred
                     existing.pred_away = away_pred
-                    existing.pred_qualified_team = pred_qualified_team
+                    existing.pred_qualified_team = get_predicted_qualified_team(
+                        match,
+                        home_pred,
+                        away_pred,
+                        selected_qualified_team
+                        
+                    )
 
                     db.commit()
 
@@ -244,12 +280,16 @@ for match in matches:
                         key=f"away_{match.match_id}"
                     )
 
-                pred_qualified_team = None
+                selected_qualified_team = None
 
-                if match.stage in KNOCKOUT_STAGES:
+                if (
+                    match.stage in KNOCKOUT_STAGES
+                    and
+                    home_pred == away_pred
+                ):
 
-                    pred_qualified_team = st.radio(
-                        "🏆 تیم صعود کننده",
+                    selected_qualified_team = st.radio(
+                        "🏆 تیم صعودکننده در صورت مساوی",
                         [
                             match.home_team,
                             match.away_team
@@ -271,7 +311,12 @@ for match in matches:
                         match_id=match.match_id,
                         pred_home=home_pred,
                         pred_away=away_pred,
-                        pred_qualified_team=pred_qualified_team
+                        pred_qualified_team=get_predicted_qualified_team(
+                            match,
+                            home_pred,
+                            away_pred,
+                            selected_qualified_team
+                        )
                     )
 
                     db.add(new_prediction)
