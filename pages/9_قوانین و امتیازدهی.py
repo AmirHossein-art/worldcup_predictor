@@ -1,5 +1,10 @@
 import streamlit as st
 
+import pandas as pd
+
+from database.connection import SessionLocal
+from database.models import StageScoringRule
+
 from utils.ui import load_main_css
 
 # Background image
@@ -40,6 +45,8 @@ from utils.constants import (
 
 from utils.auth_guard import require_password_change_if_needed
 
+from utils.stage_display import get_stage_display_name
+
 
 require_password_change_if_needed()
 
@@ -64,6 +71,68 @@ st.info(
 # ============================================
 # امتیازات مسابقات
 # ============================================
+
+st.subheader("📊 جدول امتیازدهی مراحل")
+
+db = SessionLocal()
+
+try:
+
+    rules = (
+        db.query(StageScoringRule)
+        .filter(StageScoringRule.is_active == True)
+        .order_by(StageScoringRule.rule_id.asc())
+        .all()
+    )
+
+    if rules:
+
+        rules_data = []
+        seen_display_stages = set()
+
+        for rule in rules:
+
+            display_stage = get_stage_display_name(
+                rule.stage
+            )
+
+            if display_stage in seen_display_stages:
+                continue
+
+            seen_display_stages.add(
+                display_stage
+            )
+
+            max_points = (
+                rule.exact_score_points
+                +
+                rule.qualified_team_points
+            )
+
+            rules_data.append(
+                {
+                    "مرحله": display_stage,
+                    "نتیجه دقیق": rule.exact_score_points,
+                    "برد + اختلاف گل": rule.winner_diff_points,
+                    "برد / مساوی درست": rule.winner_only_points,
+                    "تیم صعودکننده": rule.qualified_team_points,
+                    "حداکثر امتیاز": max_points,
+                }
+            )
+
+        st.dataframe(
+            pd.DataFrame(rules_data),
+            use_container_width=True,
+            hide_index=True
+        )
+
+    else:
+
+        st.info("جدول امتیازدهی مراحل هنوز ثبت نشده است.")
+
+finally:
+
+    db.close()
 
 st.subheader("⚽ امتیازات مسابقات جام جهانی")
 
@@ -195,32 +264,6 @@ with st.expander("🎯 پیش‌بینی قهرمان جام"):
         
     with col2:
         st.info(f"📊 **مثال:**\n\nپیش‌بینی: آرژانتین\n\nقهرمان واقعی: آرژانتین ✓")
-
-
-# ============================================
-# خلاصه
-# ============================================
-
-st.subheader("📊 خلاصه امتیازات")
-
-scores_data = {
-    "📋 نوع": [
-        "نتیجه دقیق",
-        "نتیجه صحیح + تفاضل گل",
-        "فقط برنده",
-        "تیم صعودکننده در حذفی",
-        "قهرمان جام"
-    ],
-    "🎯 امتیاز": [
-        EXACT_SCORE_POINTS,
-        WINNER_DIFF_POINTS,
-        WINNER_ONLY_POINTS,
-        QUALIFIED_TEAM_POINTS,
-        CHAMPION_POINTS
-    ]
-}
-
-st.dataframe(scores_data, use_container_width=True, hide_index=True)
 
 
 st.info(

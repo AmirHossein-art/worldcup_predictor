@@ -90,7 +90,8 @@ def get_prediction_points_text(
 
     score = calculate_prediction_score(
         prediction,
-        match
+        match,
+        db
     )
 
     return f"{score} امتیاز"

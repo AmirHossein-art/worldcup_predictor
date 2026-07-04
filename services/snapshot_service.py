@@ -15,7 +15,7 @@ def save_daily_score_snapshots(db, snapshot_date=None):
     )
 
     for user in users:
-        score = calculate_user_score(user)
+        score = calculate_user_score(user, db)
 
         existing_snapshot = (
             db.query(UserScoreSnapshot)

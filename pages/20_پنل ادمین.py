@@ -2,6 +2,7 @@ import streamlit as st
 from utils.ui import load_main_css
 
 from services.snapshot_service import save_daily_score_snapshots
+from admin_views.scoring_management import render_scoring_management
 
 # Background image
 from utils.background import get_base64
@@ -54,6 +55,19 @@ st.set_page_config(
 )
 
 load_main_css()
+
+admin_section = st.sidebar.radio(
+    "پنل مدیریت",
+    [
+        "مدیریت مسابقات",
+        "مدیریت امتیازدهی",
+    ]
+)
+
+if admin_section == "مدیریت امتیازدهی":
+
+    render_scoring_management()
+    st.stop()
 
 
 st.title("پنل ادمین - مدیریت کاربران")

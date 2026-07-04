@@ -178,7 +178,8 @@ all_users_scores = []
 for user in users:
 
     score = calculate_user_score(
-        user
+        user,
+        db
     )
 
     all_users_scores.append(

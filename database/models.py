@@ -315,3 +315,17 @@ class UserScoreSnapshot(Base):
             name="uq_user_score_snapshot_date"
         ),
     )
+
+class StageScoringRule(Base):
+    __tablename__ = "stage_scoring_rules"
+
+    rule_id = Column(Integer, primary_key=True, index=True)
+
+    stage = Column(String, unique=True, nullable=False)
+
+    exact_score_points = Column(Integer, nullable=False)
+    winner_diff_points = Column(Integer, nullable=False)
+    winner_only_points = Column(Integer, nullable=False)
+    qualified_team_points = Column(Integer, nullable=False, default=0)
+
+    is_active = Column(Boolean, default=True, nullable=False)

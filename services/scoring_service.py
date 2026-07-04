@@ -8,6 +8,8 @@ from utils.constants import (
 )
 from config.stages import is_knockout_match
 
+from services.stage_scoring_service import get_stage_scoring_rule
+
 def get_match_result(
     home_score: int,
     away_score: int
@@ -24,10 +26,21 @@ def get_match_result(
 
 def calculate_prediction_score(
     prediction,
-    match
+    match,
+    db
 ):
 
     score = 0
+
+    stage_points = get_stage_scoring_rule(
+        db,
+        match
+    )
+
+    exact_score_points = stage_points["exact_score_points"]
+    winner_diff_points = stage_points["winner_diff_points"]
+    winner_only_points = stage_points["winner_only_points"]
+    qualified_team_points = stage_points["qualified_team_points"]
 
     predicted_result = get_match_result(
         prediction.pred_home,
@@ -61,7 +74,7 @@ def calculate_prediction_score(
         == match.away_score
     ):
 
-        score += EXACT_SCORE_POINTS
+        score += exact_score_points
 
     elif (
         predicted_result == actual_result
@@ -69,11 +82,11 @@ def calculate_prediction_score(
         predicted_diff == actual_diff
     ):
 
-        score += WINNER_DIFF_POINTS
+        score += winner_diff_points
 
     elif predicted_result == actual_result:
 
-        score += WINNER_ONLY_POINTS
+        score += winner_only_points
 
     # ==========================
     # Qualified Team
@@ -110,13 +123,14 @@ def calculate_prediction_score(
             predicted_qualified_team == match.qualified_team
         ):
 
-            score += QUALIFIED_TEAM_POINTS
+            score += qualified_team_points
 
     return score
 
 
 def calculate_user_score(
-    user
+    user,
+    db
 ):
 
     total_score = 0
@@ -131,7 +145,8 @@ def calculate_user_score(
         total_score += (
             calculate_prediction_score(
                 prediction,
-                match
+                match,
+                db
             )
         )
 
