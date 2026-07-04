@@ -111,12 +111,12 @@ try:
 
             rules_data.append(
                 {
-                    "مرحله": display_stage,
-                    "نتیجه دقیق": rule.exact_score_points,
-                    "برد + اختلاف گل": rule.winner_diff_points,
-                    "برد / مساوی درست": rule.winner_only_points,
-                    "تیم صعودکننده": rule.qualified_team_points,
                     "حداکثر امتیاز": max_points,
+                    "تیم صعودکننده": rule.qualified_team_points,
+                    "برد / مساوی درست": rule.winner_only_points,
+                    "برد + اختلاف گل": rule.winner_diff_points,
+                    "نتیجه دقیق": rule.exact_score_points,
+                    "مرحله": display_stage,
                 }
             )
 
