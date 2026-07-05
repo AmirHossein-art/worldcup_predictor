@@ -3,19 +3,28 @@ from datetime import date, timedelta
 from database.models import User, UserScoreSnapshot
 from services.scoring_service import calculate_user_score
 
+def get_snapshot_users_query(db):
 
-def save_daily_score_snapshots(db, snapshot_date=None):
-    if snapshot_date is None:
-        snapshot_date = date.today()
-
-    users = (
+    return (
         db.query(User)
         .filter(User.is_verified == True)
-        .all()
     )
 
+
+def save_daily_score_snapshots(db, snapshot_date=None):
+
+    if snapshot_date is None:
+
+        snapshot_date = date.today()
+
+    users = get_snapshot_users_query(db).all()
+
     for user in users:
-        score = calculate_user_score(user, db)
+
+        score = calculate_user_score(
+            user,
+            db
+        )
 
         existing_snapshot = (
             db.query(UserScoreSnapshot)
@@ -27,16 +36,31 @@ def save_daily_score_snapshots(db, snapshot_date=None):
         )
 
         if existing_snapshot:
+
             existing_snapshot.score = score
+
         else:
+
             snapshot = UserScoreSnapshot(
                 user_id=user.user_id,
                 snapshot_date=snapshot_date,
                 score=score
             )
+
             db.add(snapshot)
 
     db.commit()
+
+def save_baseline_score_snapshots(db, baseline_date=None):
+
+    if baseline_date is None:
+
+        baseline_date = date.today() - timedelta(days=1)
+
+    save_daily_score_snapshots(
+        db,
+        baseline_date
+    )
 
 
 def get_daily_phenomenon(db, target_date=None):

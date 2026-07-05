@@ -74,6 +74,18 @@ st.title("پنل ادمین - مدیریت کاربران")
 
 db = SessionLocal()
 
+from services.snapshot_service import save_daily_score_snapshots
+
+if st.button("🔄 به‌روزرسانی snapshot امروز"):
+
+    save_daily_score_snapshots(db)
+
+    st.session_state["stage_scoring_success_message"] = (
+        "snapshot امروز همه کاربران با امتیازهای فعلی به‌روزرسانی شد."
+    )
+
+    st.rerun()
+
 users = db.query(User).all()
 
 for user in users:
