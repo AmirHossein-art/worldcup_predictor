@@ -1,0 +1,9 @@
+begin;
+
+update matches
+set stage = '1/8 نهایی'
+where match_id = 107
+	and stage = '1/16 نهایی'
+returning match_id, home_team, away_team, stage, kickoff_time, home_score;
+
+commit;
